@@ -11,11 +11,11 @@ data:
   kubernetes.yaml: |
     mode: cluster
   settings.yaml: |
-    title: CWK space
-  #settings.yaml: |
-  #  providers:
-  #    longhorn:
-  #      url: https://longhorn.my.network
+    title: CWK Laboratory
+  settings.yaml: |
+   providers:
+     longhorn:
+       url: https://longhorn.my.network
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
@@ -60,4 +60,3 @@ data:
     - search:
         provider: duckduckgo
         target: _blank
-  docker.yaml: ""
