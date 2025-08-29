@@ -12,7 +12,6 @@ metadata:
     gethomepage.dev/icon: homepage.png
     gethomepage.dev/name: Homepage
 spec:
-  ingressClassName: cilium
   rules:
     - host: "cwk.homepage"
       http:
