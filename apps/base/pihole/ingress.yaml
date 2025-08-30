@@ -3,19 +3,13 @@ kind: Ingress
 metadata:
   name: pihole-ingress
   namespace: pihole
-  annotations:
-    gethomepage.dev/description: Ad-blocking DNS
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/group: Network
-    gethomepage.dev/icon: pi-hole.png
-    gethomepage.dev/name: Pi-hole
 spec:
   ingressClassName: cilium
   rules:
     - host: "cwk.pihole"
       http:
         paths:
-          - path: "/admin"
+          - path: "/"
             pathType: Prefix
             backend:
               service:
