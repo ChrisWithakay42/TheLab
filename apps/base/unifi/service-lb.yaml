@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-lb
+  namespace: unifi
+  labels:
+    cilium-lb-pool: main-pool
+spec:
+  type: LoadBalancer
+  selector:
+    app: unifi
+  ports:
+    - name: web-ui
+      port: 8443
+      targetPort: web-ui
+      protocol: TCP
+    - name: controller
+      port: 8080
+      targetPort: controller
+      protocol: TCP
+    - name: stun
+      port: 3478
+      targetPort: stun
+      protocol: UDP
+    - name: discovery
+      port: 10001
+      targetPort: discovery
+      protocol: UDP
+    - name: speedtest
+      port: 6789
+      targetPort: speedtest
+      protocol: TCP
+    - name: l2-discover
+      port: 1900
+      targetPort: l2-discover
+      protocol: UDP

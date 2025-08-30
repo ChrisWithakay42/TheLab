@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifi-deployment
+  namespace: unifi
+  labels:
+    app: unifi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unifi
+  template:
+    metadata:
+      labels:
+        app: unifi
+    spec:
+      containers:
+      - name: unifi
+        image: lscr.io/linuxserver/unifi-network-application:latest
+        ports:
+        - name: web-ui
+          containerPort: 8443
+          protocol: TCP
+        - name: controller
+          containerPort: 8080
+          protocol: TCP
+        - name: stun
+          containerPort: 3478
+          protocol: UDP
+        - name: discovery
+          containerPort: 10001
+          protocol: UDP
+        # These are additional ports needed for specific device features
+        - name: speedtest
+          containerPort: 6789
+          protocol: TCP
+        - name: l2-discover
+          containerPort: 1900
+          protocol: UDP
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Etc/UTC" # IMPORTANT: Change this to your timezone, e.g., "America/New_York"
+        - name: MONGO_HOST
+          value: "mongo.unifi-db.svc.cluster.local"
+        - name: MONGO_PORT
+          value: "27017"
+        - name: MONGO_DBNAME
+          value: "unifi"
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: unifi-user-secret
+              key: MONGO_USERNAME
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: unifi-user-secret
+              key: MONGO_PASSWORD
+        volumeMounts:
+        - name: unifi-config
+          mountPath: /config
+      volumes:
+      - name: unifi-config
+        persistentVolumeClaim:
+          claimName: unifi-pvc
