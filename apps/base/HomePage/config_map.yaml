@@ -8,11 +8,12 @@ metadata:
 data:
   kubernetes.yaml: |
     mode: cluster
-  settings.yaml: ""
-  #settings.yaml: |
-  #  providers:
-  #    longhorn:
-  #      url: https://longhorn.my.network
+  settings.yaml: |
+    serviceDiscovery:
+      ingress: false
+    providers:
+      longhorn:
+        url: https://cwk.longhorn
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
@@ -21,6 +22,18 @@ data:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
+    - HomeLab:
+        - Pi-hole:
+            href: http://cwk.pihole/admin/
+            description: Ad-blocking DNS
+            icon: pi-hole.svg
+            widget:
+              type: pihole
+              version: 6
+              url: http://pihole.pihole:80/
+              # url: http://pihole.pihole.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_PIHOLE_API_KEY}}"
+
     - My First Group:
         - My First Service:
             href: http://localhost/
@@ -48,12 +61,7 @@ data:
           cpu: true
           memory: true
           showLabel: true
-    - resources:
-        backend: resources
         expanded: true
-        cpu: true
-        memory: true
-        network: default
     - search:
         provider: duckduckgo
         target: _blank
