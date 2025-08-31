@@ -7,6 +7,8 @@ metadata:
     cilium-lb-pool: main-pool
 spec:
   type: LoadBalancer
+  externalTrafficPolicy: Local
+  loadBalancerClass: "io.cilium/l2-announcer"
   selector:
     app: pihole
   ports:

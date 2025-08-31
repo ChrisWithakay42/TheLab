@@ -25,6 +25,8 @@ spec:
             - configMapRef:
                 name: pihole-config
           env:
+            - name: DNSMASQ_LISTENING
+              value: all
             - name: WEBPASSWORD
               valueFrom:
                 secretKeyRef:
