@@ -4,6 +4,7 @@ metadata:
   name: homepage
   namespace: homepage
 spec:
+  ingressClassName: cilium
   rules:
     - host: "cwk.homepage"
       http:

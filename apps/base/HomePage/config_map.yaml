@@ -34,15 +34,19 @@ data:
               # url: http://pihole.pihole.svc.cluster.local
               key: "{{HOMEPAGE_VAR_PIHOLE_API_KEY}}"
 
-    - My First Group:
-        - My First Service:
-            href: http://localhost/
-            description: Homepage is awesome
+    - Cluster Management:
+        - Longhorn:
+            href: http://cwk.longhorn/
+            description: Cluster Storage Management
 
     - My Second Group:
-        - My Second Service:
+        - Top Service:
             href: http://localhost/
-            description: Homepage is the best
+            description: test
+        - Nested Group:
+            - My Second Service:
+                href: http://localhost/
+                description: Homepage is the best
 
     - My Third Group:
         - My Third Service:
