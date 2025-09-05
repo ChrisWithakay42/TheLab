@@ -73,6 +73,22 @@
         group: "{{ kubeconfig_user }}"
         mode: '0600'
 
+    - name: Replace localhost with master IP in kubeconfig
+      ansible.builtin.command:
+        cmd: "sed -i 's/127.0.0.1/{{ ansible_host }}/g' /home/{{ kubeconfig_user }}/.kube/config"
+      become: no
+
+    - name: Wait for k3s server on control-0 to be ready
+      ansible.builtin.command:
+        cmd: "kubectl get nodes"
+      environment:
+        KUBECONFIG: "/etc/rancher/k3s/k3s.yaml"
+      retries: 30
+      delay: 10
+      until: "result.rc == 0"
+      register: result
+      changed_when: false
+
 # Play 2: Fetch the node token
 - name: Fetch the node-token from the first master
   hosts: k3s_masters[0]
@@ -139,11 +155,11 @@
         dest: /tmp/k3s-installer.sh
         mode: '0755'
 
-    - name: Install k3s on other masters
-      ansible.builtin.command: /tmp/k3s-installer.sh server
-      args:
-        creates: /etc/systemd/system/k3s.service
-      when: inventory_hostname in groups['k3s_masters']
+    # - name: Install k3s on other masters
+    #   ansible.builtin.command: /tmp/k3s-installer.sh server
+    #   args:
+    #     creates: /etc/systemd/system/k3s.service
+    #   when: inventory_hostname in groups['k3s_masters']
 
     - name: Install k3s on agent nodes
       ansible.builtin.command: /tmp/k3s-installer.sh agent
@@ -160,24 +176,10 @@
   vars:
     kubeconfig_user: pi
     cilium_cli_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
-    cilium_version: "v1.18.0"
-    cilium_lb_ip: "192.168.1.128"
   tasks:
-    - name: Wait for all nodes to be registered with the API server
-      ansible.builtin.command:
-        cmd: "kubectl get nodes --no-headers"
-      environment:
-        KUBECONFIG: "/home/{{ kubeconfig_user }}/.kube/config"
-      register: node_list
-      until: "node_list.stdout_lines | length == groups['all'] | length"
-      retries: 20
-      delay: 15
-      changed_when: false
-      become: no
-
     - name: Download Cilium CLI for the correct architecture
       ansible.builtin.get_url:
-        url: "https://github.com/cilium/cilium-cli/releases/download/{{ cilium_version }}/cilium-linux-{{ cilium_cli_arch }}.tar.gz"
+        url: "https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-{{ cilium_cli_arch }}.tar.gz"
         dest: "/tmp/cilium-linux-{{ cilium_cli_arch }}.tar.gz"
         mode: '0644'
 
@@ -206,7 +208,6 @@
           --set ingressController.enabled=true
           --set ingressController.loadbalancer.mode=shared
           --set ingressController.service.type=LoadBalancer
-          --set ingressController.service.annotations."cilium\.io/lb-ipam-ips"={{ cilium_lb_ip }}
       environment:
         KUBECONFIG: "/home/{{ kubeconfig_user }}/.kube/config"
       register: cilium_install_result
@@ -223,3 +224,22 @@
       retries: 10
       delay: 30
       become: no
+
+# Play 5: Fetch kubeconfig to local machine
+- name: Fetch kubeconfig to local machine
+  hosts: k3s_masters[0]
+  gather_facts: no
+  vars:
+    kubeconfig_user: pi
+  tasks:
+    - name: Remove existing local kubeconfig if it exists
+      ansible.builtin.file:
+        path: "~/.kube/config"
+        state: absent
+      delegate_to: localhost
+
+    - name: Fetch the modified kubeconfig from the master
+      ansible.builtin.fetch:
+        src: "/home/{{ kubeconfig_user }}/.kube/config"
+        dest: "~/.kube/config"
+        flat: yes
