@@ -27,7 +27,7 @@ spec:
           env:
             - name: DNSMASQ_LISTENING
               value: all
-            - name: WEBPASSWORD
+            - name: FTLCONF_webserver_api_password
               valueFrom:
                 secretKeyRef:
                   name: pihole-secret
