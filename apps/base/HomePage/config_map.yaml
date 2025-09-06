@@ -30,9 +30,10 @@ data:
             widget:
               type: pihole
               version: 6
-              url: http://pihole.pihole:80/
-              # url: http://pihole.pihole.svc.cluster.local
-              key: "{{HOMEPAGE_VAR_PIHOLE_API_KEY}}"
+              url: http://pihole.pihole/
+              # key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+              # key: "{{HOMEPAGE_VAR_PIHOLE_API_KEY}}"
+              key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
 
     - Cluster Management:
         - Longhorn:
