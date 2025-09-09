@@ -34,6 +34,10 @@ data:
               # key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
               # key: "{{HOMEPAGE_VAR_PIHOLE_API_KEY}}"
               key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+        - Unifi:
+            href: https://192.168.1.133:8443/
+            description: Unifi Controller
+            icon: unifi.svg
 
     - Cluster Management:
         - Longhorn:
