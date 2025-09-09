@@ -5,6 +5,7 @@ metadata:
   namespace: pihole
 data:
   TZ: "Europe/London"
-  DNS1: "1.1.1.1"
-  DNS2: "1.0.0.1"
+  PIHOLE_DNS_1: "1.1.1.1"
+  PIHOLE_DNS_2: "1.0.0.1"
   CORS_HOSTS: "pihole.pihole,pihole.pihole.svc,cwk.pihole"
+  FTLCONF_dns_listeningMode: "all"

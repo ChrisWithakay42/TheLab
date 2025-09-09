@@ -3,12 +3,11 @@ kind: Service
 metadata:
   name: pihole
   namespace: pihole
-  labels:
-    cilium-lb-pool: main-pool
+  annotations:
+    cilium.io/loadbalancer-ip-pool: main-pool
 spec:
   type: LoadBalancer
-  externalTrafficPolicy: Cluster
-  loadBalancerClass: "io.cilium/l2-announcer"
+  externalTrafficPolicy: Local
   selector:
     app: pihole
   ports:
