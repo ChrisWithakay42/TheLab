@@ -9,5 +9,8 @@ data:
     db.createUser({
       user: 'unifi',
       pwd: 'unifipassword',
-      roles: [{ role: 'readWrite', db: 'unifi' }],
+      roles: [
+        { role: 'readWrite', db: 'unifi' },
+        { role: 'readWrite', db: 'unifi_stat' }
+      ],
     });
