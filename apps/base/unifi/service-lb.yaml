@@ -3,8 +3,8 @@ kind: Service
 metadata:
   name: unifi-lb
   namespace: unifi
-  labels:
-    cilium-lb-pool: main-pool
+  annotations:
+    cilium.io/loadbalancer-ip-pool: main-pool
 spec:
   type: LoadBalancer
   selector:
