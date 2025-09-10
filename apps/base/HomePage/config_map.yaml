@@ -23,35 +23,31 @@ data:
               href: https://github.com/
   services.yaml: |
     - HomeLab:
-        - Pi-hole:
-            href: http://cwk.pihole/admin/
-            description: Ad-blocking DNS
-            icon: pi-hole.svg
-            widget:
-              type: pihole
-              version: 6
-              url: http://pihole.pihole/
-              # key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
-              # key: "{{HOMEPAGE_VAR_PIHOLE_API_KEY}}"
-              key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
-        - Unifi:
-            href: https://192.168.1.133:8443/
-            description: Unifi Controller
-            icon: unifi.svg
+        - Network:
+            - Pi-hole:
+                href: http://cwk.pihole/admin/
+                description: Ad-blocking DNS
+                icon: pi-hole.svg
+                widget:
+                  type: pihole
+                  version: 6
+                  url: http://pihole.pihole/
+                  key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+            - Unifi:
+                href: https://192.168.1.133:8443/
+                description: Unifi Controller
+                icon: unifi.svg
+        - Cluster Management:
+            - Longhorn:
+                href: http://cwk.longhorn/
+                description: Cluster Storage Management
 
-    - Cluster Management:
-        - Longhorn:
-            href: http://cwk.longhorn/
-            description: Cluster Storage Management
-
-    - My Second Group:
-        - Top Service:
-            href: http://localhost/
-            description: test
-        - Nested Group:
-            - My Second Service:
-                href: http://localhost/
-                description: Homepage is the best
+    - Misc:
+        - Automation Tools:
+            - n8n:
+                href: http://cwk.n8n/
+                description: Workflow Automation
+                icon: n8n.svg
 
     - My Third Group:
         - My Third Service:
