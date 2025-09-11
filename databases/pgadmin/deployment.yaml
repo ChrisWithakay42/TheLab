@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  namespace: pgadmin
+  labels:
+    app: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      securityContext:
+        fsGroup: 5050
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4:9.8
+          envFrom:
+            - secretRef:
+                name: pgadmin-secret
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: pgadmin-data
+              mountPath: /var/lib/pgadmin
+      volumes:
+        - name: pgadmin-data
+          persistentVolumeClaim:
+            claimName: pgadmin-pvc
