@@ -23,6 +23,10 @@ data:
               href: https://github.com/
   services.yaml: |
     - HomeLab:
+        - pgAdmin:
+            href: http://cwk.pgadmin/
+            description: Database GUI
+            icon: pgadmin.svg
         - Network:
             - Pi-hole:
                 href: http://cwk.pihole/admin/
@@ -41,7 +45,6 @@ data:
             - Longhorn:
                 href: http://cwk.longhorn/
                 description: Cluster Storage Management
-
     - Misc:
         - Automation Tools:
             - n8n:
