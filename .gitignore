@@ -1,1 +1,2 @@
 playbooks/inventory.yaml
+playbooks/ansible.cfg
