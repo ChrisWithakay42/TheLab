@@ -45,6 +45,11 @@ data:
             - Longhorn:
                 href: http://cwk.longhorn/
                 description: Cluster Storage Management
+                icon: longhorn.svg
+            - Graylog:
+                href: http://cwk.graylog/
+                description: Log Management
+                icon: graylog.svg
     - Misc:
         - Reading:
             - Wallabag:
