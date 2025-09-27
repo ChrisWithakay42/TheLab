@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-cm
+  namespace: opensearch
+data:
+  discovery.type: "single-node"
+  opensearch_java_opts: "-Xms512m -Ymx512m"
+  plugins.security.disabled: "true"
