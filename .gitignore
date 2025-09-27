@@ -1,2 +1,4 @@
 playbooks/inventory.yaml
 playbooks/ansible.cfg
+apps/base/.DS_Store
+.DS_Store
