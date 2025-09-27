@@ -2,3 +2,5 @@ playbooks/inventory.yaml
 playbooks/ansible.cfg
 apps/base/.DS_Store
 .DS_Store
+apps/base/graylog/secret.yaml
+databases/graylog/secret.yaml
