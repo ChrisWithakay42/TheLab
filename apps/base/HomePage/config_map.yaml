@@ -32,6 +32,10 @@ data:
             description: Database GUI
             icon: pgadmin.svg
         - Network:
+            - Vodafone router:
+                href: http://192.168.1.1/
+                description: Vodafone Router
+                icon: https://cdn.jsdelivr.net/npm/@mdi/svg/svg/router-wireless.svg
             - Pi-hole:
                 href: http://cwk.pihole/admin/
                 description: Ad-blocking DNS
@@ -41,6 +45,10 @@ data:
                   version: 6
                   url: http://pihole.pihole/
                   key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+            - NetGear switch:
+                href: http://192.168.1.10/
+                description: NetGear Switch
+                icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/netgear-light.svg
             - Unifi:
                 href: https://192.168.1.133:8443/
                 description: Unifi Controller
