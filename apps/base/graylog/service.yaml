@@ -3,7 +3,10 @@ kind: Service
 metadata:
   name: graylog
   namespace: graylog
+  annotations:
+    cilium.io/loadbalancer-ip-pool: main-pool
 spec:
+  type: LoadBalancer
   selector:
     app: graylog
   ports:
