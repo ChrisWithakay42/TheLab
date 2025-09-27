@@ -46,6 +46,11 @@ data:
                 href: http://cwk.longhorn/
                 description: Cluster Storage Management
     - Misc:
+        - Reading:
+            - Wallabag:
+                href: http://cwk.wallabag
+                description: Read later application
+                icon: wallabag.svg
         - Automation Tools:
             - n8n:
                 href: http://cwk.n8n/
