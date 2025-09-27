@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: wallabag-postgres-pvc
+  name: wallabag-pstgres-pvc
   namespace: wallabag-db
 spec:
-  accessModes:
+  accessMode:
     - ReadWriteOnce
   storageClassName: longhorn
   resources:
