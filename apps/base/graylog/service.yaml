@@ -22,3 +22,7 @@ spec:
       protocol: UDP
       port: 5140
       targetPort: syslog-udp
+    - name: beats
+      protocol: TCP
+      port: 5044
+      targetPort: beats

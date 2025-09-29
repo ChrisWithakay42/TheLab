@@ -7,6 +7,8 @@ metadata:
     app: graylog
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: graylog
@@ -55,6 +57,9 @@ spec:
             - containerPort: 5140
               name: syslog-udp
               protocol: UDP
+            - containerPort: 5044
+              name: beats
+              protocol: TCP
           volumeMounts:
             - name: graylog-journal
               mountPath: /usr/share/graylog/data/journal
