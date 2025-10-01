@@ -53,15 +53,15 @@ data:
                 href: https://192.168.1.133:8443/
                 description: Unifi Controller
                 icon: unifi.svg
-        - Cluster Management:
-            - Longhorn:
-                href: http://cwk.longhorn/
-                description: Cluster Storage Management
-                icon: longhorn.svg
-            - Graylog:
-                href: http://cwk.graylog/
-                description: Log Management
-                icon: graylog.svg
+    - Cluster Management:
+        - Longhorn:
+            href: http://cwk.longhorn/
+            description: Cluster Storage Management
+            icon: longhorn.svg
+        - Graylog:
+            href: http://cwk.graylog/
+            description: Log Management
+            icon: graylog.svg
     - Misc:
         - Reading:
             - Wallabag:
@@ -74,10 +74,6 @@ data:
                 description: Workflow Automation
                 icon: n8n.svg
 
-    - My Third Group:
-        - My Third Service:
-            href: http://localhost/
-            description: Homepage is 😎
   widgets.yaml: |
     - kubernetes:
         cluster:
