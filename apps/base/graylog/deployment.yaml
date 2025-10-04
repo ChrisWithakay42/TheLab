@@ -29,6 +29,13 @@ spec:
       containers:
         - name: graylog
           image: graylog/graylog:5.2
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "250m"
+            limits:
+              memory: "1.5Gi"
+              cpu: "500m"
           env:
             - name: GRAYLOG_MESSAGE_JOURNAL_ENABLED
               value: "false"
