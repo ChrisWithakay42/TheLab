@@ -20,6 +20,13 @@ spec:
       containers:
         - name: opensearch
           image: opensearchproject/opensearch:2.11.0
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
           envFrom:
             - configMapRef:
                 name: opensearch-cm
