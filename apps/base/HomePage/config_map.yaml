@@ -53,6 +53,7 @@ data:
                 href: https://192.168.1.133:8443/
                 description: Unifi Controller
                 icon: unifi.svg
+
     - Cluster Management:
         - Longhorn:
             href: http://cwk.longhorn/
@@ -62,6 +63,10 @@ data:
             href: http://cwk.graylog/
             description: Log Management
             icon: graylog.svg
+        - Grafana:
+            href: http://cwk.grafana/
+            description: Metrics Monitoring
+            icon: grafana.svg
     - Misc:
         - Reading:
             - Wallabag:
