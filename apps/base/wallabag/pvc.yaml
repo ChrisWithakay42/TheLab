@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: wallabag-pvc
   namespace: wallabag
+  labels:
+    longhorn-backup: "true"
 spec:
   accessModes:
     - ReadWriteOnce

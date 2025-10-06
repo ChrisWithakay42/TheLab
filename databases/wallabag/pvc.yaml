@@ -3,8 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: wallabag-pstgres-pvc
   namespace: wallabag-db
+  labels:
+    longhorn-backup: "true"
 spec:
-  accessMode:
+  accessModes:
     - ReadWriteOnce
   storageClassName: longhorn
   resources:

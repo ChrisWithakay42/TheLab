@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
   namespace: n8n-db
+  labels:
+    longhorn-backup: "true"
 spec:
   accessModes:
     - ReadWriteOnce
