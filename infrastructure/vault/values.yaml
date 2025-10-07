@@ -1,0 +1,16 @@
+server:
+  dev:
+    enabled: true
+
+  # Use a persistent volume so data is not lost on restarts
+  persistence:
+    enabled: true
+    storageClass: "longhorn"
+    size: "1Gi"
+
+  # Expose the service within the cluster
+  service:
+    type: "ClusterIP"
+
+injector:
+  enabled: false
