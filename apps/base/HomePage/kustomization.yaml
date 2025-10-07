@@ -5,7 +5,7 @@ resources:
   - cluster_role.yaml
   - service_account.yaml
   - config_map.yaml
-  - sealed-homepage-secret.yaml
+  - external-secret.yaml
   - deployment.yaml
   - service.yaml
   - ingress.yaml
