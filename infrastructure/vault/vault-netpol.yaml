@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-for-vault-debug
+  namespace: vault
+spec:
+  # Apply to all Vault server pods
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: vault
+  policyTypes:
+    - Ingress
+  # Allow ALL ingress traffic
+  ingress:
+    - {} # An empty ingress rule allows all sources and all ports

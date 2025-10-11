@@ -1,16 +1,59 @@
+# values.yaml for Vault to be used with ESO
+global:
+  enabled: true
+  # In a real production setup, you should set tlsDisable to false
+  # and configure TLS certificates.
+  tlsDisable: true
+
+# Configure the Vault server component
 server:
-  dev:
+  # Run in High-Availability (HA) mode with 3 replicas
+  ha:
     enabled: true
+    replicas: 3
+    # Use the integrated Raft storage backend
+    raft:
+      enabled: true
+      # This setting is crucial and lets the Helm chart correctly
+      # set the node_id for each Vault pod.
+      setNodeId: true
+      config: |
+        ui = true
 
-  # Use a persistent volume so data is not lost on restarts
-  persistence:
+        storage "raft" {
+          path = "/vault/data"
+        }
+
+        listener "tcp" {
+          address     = "[::]:8200"
+          cluster_address = "[::]:8201"
+          tls_disable = "true"
+        }
+
+  # --- PERSISTENT STORAGE CONFIGURATION ---
+  # This section ensures that Vault uses a durable, shared storage backend
+  # suitable for a high-availability setup.
+  dataStorage:
     enabled: true
+    size: 10Gi
+    # IMPORTANT: Replace 'longhorn' with the name of your actual 
+    # shared StorageClass (e.g., 'rook-ceph-block', 'nfs-client', etc.).
     storageClass: "longhorn"
-    size: "1Gi"
 
-  # Expose the service within the cluster
-  service:
-    type: "ClusterIP"
+  # Set resource requests and limits for the Vault pods
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
 
 injector:
   enabled: false
+
+# Enable the Vault UI
+ui:
+  enabled: true
+  service:
+    type: "LoadBalancer" # Or "NodePort" if you don't have a LoadBalancer
