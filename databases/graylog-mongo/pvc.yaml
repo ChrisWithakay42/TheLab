@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: mongo-pvc
   namespace: graylog-db
+  labels:
+    longhorn-backup: "true"
 spec:
   accessModes:
     - ReadWriteOnce
