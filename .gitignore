@@ -6,3 +6,4 @@ apps/base/graylog/secret.yaml
 databases/graylog/secret.yaml
 infrastructure/longhorn/longhorn-backblaze-b2-setup.md
 master.key
+unseal-key.txt
