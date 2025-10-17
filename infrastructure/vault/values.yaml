@@ -19,15 +19,22 @@ server:
       setNodeId: true
       config: |
         ui = true
-
-        storage "raft" {
-          path = "/vault/data"
-        }
-
         listener "tcp" {
-          address     = "[::]:8200"
+          address = "[::]:8200"
           cluster_address = "[::]:8201"
           tls_disable = "true"
+        }
+        storage "raft" {
+          path = "/vault/data"
+          retry_join {
+            leader_api_addr = "http://vault-0.vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-1.vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-2.vault-internal:8200"
+          }
         }
 
   # --- PERSISTENT STORAGE CONFIGURATION ---
@@ -56,4 +63,4 @@ injector:
 ui:
   enabled: true
   service:
-    type: "LoadBalancer" # Or "NodePort" if you don't have a LoadBalancer
+    type: "ClusterIP" # Or "NodePort" if you don't have a LoadBalancer
