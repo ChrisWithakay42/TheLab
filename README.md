@@ -1,150 +1,63 @@
-# Homelab Kubernetes Cluster Setup Guide
+# Homelab Kubernetes Cluster
 
-This guide outlines the steps to set up and configure your Kubernetes cluster for the homelab environment.
+This repository is dedicated to my journey of learning and applying platform engineering skills and best practices. Self-hosting applications provides an invaluable, hands-on experience, forcing me to consider the entire application lifecycle—from initial configuration to end-user access. This includes crucial considerations for backups and disaster recovery, security hardening, and designing for scalability where needed.
 
-## 1. Node Setup (Prerequisites)
+## Hardware
 
-Before running the Ansible playbook, ensure your nodes meet the following prerequisites:
+The Kubernetes cluster runs on a heterogeneous mix of nodes, blending low-power ARM-based devices with more powerful x86 hardware. This setup provides a realistic environment for managing diverse architectures.
 
-*   **Operating System:** A compatible Linux distribution (e.g., Ubuntu, Debian, Raspberry Pi OS).
-*   **SSH Access:** SSH server installed and configured for passwordless authentication (SSH keys recommended) from your Ansible control machine.
-*   **Python:** Python 3 installed on all nodes.
-*   **Basic Networking:** Nodes have network connectivity and can resolve DNS.
-*   **`iptables` and `open-iscsi`:** These packages are installed on all nodes. The Ansible playbook will attempt to install them, but it's good to ensure they are available.
+**Bare Metal Nodes:**
+*   3 x Raspberry Pi 5 (8GB RAM)
+*   1 x HP EliteDesk G4 Desktop Mini (64GB RAM)
 
-## 2. Run Ansible Playbook (K3s & Cilium Installation)
+**Virtualised Nodes:**
+*   Failover VMs are hosted on a separate Proxmox cluster, providing resilience. A detailed look into the Proxmox setup will be available in another repository in the near future.
 
-The `install-k3s-cilium.yaml` Ansible playbook will install K3s (a lightweight Kubernetes distribution) and configure Cilium as the CNI (Container Network Interface) and Ingress controller.
+## Cluster Provisioning and Architecture
 
-**Before running:**
+All nodes run hardened Ubuntu Server, with configurations following security best practices outlined by Canonical and the Cloud Native Computing Foundation (CNCF).
 
-*   **Inventory File:** Ensure you have an Ansible inventory file (e.g., `playbooks/inventory.yaml`) that defines your master and agent nodes.
-    ```yaml
-    # Example playbooks/inventory.yaml
-    [k3s_masters]
-    control-0 ansible_host=192.168.1.210
+To ensure consistency and rapid deployment, the cluster provisioning process is automated using Ansible playbooks. These playbooks handle everything from initial setup to node configuration, making it easy to tear down, rebuild, or scale the cluster by adding or removing nodes.
 
-    [k3s_agents]
-    worker-1 ansible_host=199.168.1.211
-    worker-2 ansible_host=199.168.1.212
-    ```
-    *(Replace with your actual node hostnames/IPs)*
+## Hosted Applications
 
-*   **Kubeconfig User:** The playbook assumes a `kubeconfig_user` (default `pi`) for setting up kubeconfig. Adjust if necessary.
+The cluster hosts a variety of applications, separated into infrastructure management, end-user services, and custom-built projects.
 
-**To run the playbook:**
+### Infrastructure Management
 
-```bash
-ansible-playbook -i playbooks/inventory.yaml playbooks/install-k3s-cilium.yaml --ask-become-pass
-```
-*(You may need to provide your `sudo` password for `ansible-playbook`)*
+These applications form the backbone of the cluster, providing essential services for storage, secrets management, and observability.
 
-This playbook will:
-*   Install necessary prerequisites (`iptables`, `open-iscsi`).
-*   Install K3s on the master node and join agent nodes.
-*   Install Cilium as the CNI, enabling `kubeProxyReplacement`, `l2announcements`, `externalIPs`, and `ingressController`.
-*   Fetch the kubeconfig file to your local machine.
+| Application                 | Description                                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Longhorn**                | Provides persistent, replicated block storage for stateful applications.                                |
+| **HashiCorp Vault**         | Manages secrets, ensuring that sensitive information is stored securely and accessed via authentication.  |
+| **External Secrets Operator** | Syncs secrets from Vault into Kubernetes `Secret` objects, making them available to applications.       |
+| **pgAdmin**                 | A web-based GUI for managing PostgreSQL databases running in the cluster.                               |
+| **Prometheus**              | Collects and stores time-series metrics from nodes and applications for system monitoring.              |
+| **Grafana**                 | Visualizes metrics from Prometheus, providing dashboards for observability and system health.           |
+| **Graylog**                 | A centralized log management solution for security monitoring and application debugging.                |
 
-## 3. Apply Cilium Manifests (Optional, if not handled by Playbook)
+### GitOps
 
-If you have additional Cilium-specific configurations (e.g., `CiliumLoadBalancerIPPool`, `CiliumL2AnnouncementPolicy`) that are not part of the Ansible playbook, apply them now.
+Currently, the GitOps workflow is centered around GitLab Runners, which handle CI/CD pipelines for deploying applications. There is a future intent to migrate this workflow to Flux for a more declarative, pull-based GitOps approach.
 
-```bash
-kubectl apply -f infrastructure/configs/cilium/ip-pool.yaml
-kubectl apply -f infrastructure/configs/cilium/l2policy.yaml
-# Add any other specific Cilium manifests here
-```
+### End-User Applications
 
-## 4. Install Sealed Secrets
+These applications provide services directly to users on the local network.
 
-Sealed Secrets allows you to store encrypted Kubernetes Secrets in Git, which can then be decrypted only by the controller running in your cluster.
+| Application   | Description                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------- |
+| **Homepage**  | A custom, web-based portal that serves as a central dashboard for accessing all homelab services.         |
+| **Pi-hole**   | Provides network-wide ad-blocking and local DNS management.                                             |
+| **Ollama**    | Hosts and serves smaller Large Language Models (LLMs) for various AI-powered tasks.                     |
+| **Open WebUI**| An intuitive web interface for interacting with the LLMs hosted on Ollama.                                |
 
-```bash
-# Add the Bitnami Sealed Secrets Helm repository
-helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+### Custom-Built Applications
 
-# Update Helm repositories
-helm repo update
+These are projects I have developed to solve specific needs or explore new technologies.
 
-# Install Sealed Secrets chart in the kube-system namespace
-helm install sealed-secrets sealed-secrets/sealed-secrets -n kube-system --create-namespace
-
-# Wait for Sealed Secrets controller to be ready
-kubectl rollout status deployment/sealed-secrets -n kube-system --timeout=300s
-```
-
-## 5. Install Longhorn
-
-Longhorn is a distributed block storage system for Kubernetes.
-
-```bash
-# Add the Longhorn Helm repository
-helm repo add longhorn https://charts.longhorn.io
-
-# Update Helm repositories
-helm repo update
-
-# Install Longhorn chart in the longhorn-system namespace
-helm install longhorn longhorn/longhorn -n longhorn-system --create-namespace
-
-# Wait for Longhorn deployment to be ready
-kubectl rollout status deployment/longhorn-driver -n longhorn-system --timeout=300s
-```
-
-## 6. Resealing Secrets (e.g., for Homepage Pi-hole Password)
-
-After a cluster re-deployment, the `sealed-secrets` controller generates a new private key. This means existing `SealedSecret` resources need to be re-encrypted with the new public key.
-
-**Steps to Reseal a Secret:**
-
-1.  **Fetch the current public certificate from your cluster:**
-    ```bash
-    kubectl get secret -n kube-system sealed-secrets-key<SUFFIX> -o jsonpath="{.data['tls\.crt']}" | base64 -d > pub-cert.pem
-    ```
-    *(Replace `<SUFFIX>` with the actual suffix of your `sealed-secrets-key` secret, e.g., `sealed-secrets-keyh6vzn`. You can find this by running `kubectl get secrets -n kube-system -o name | grep sealed-secrets-key`)*
-
-2.  **Create a temporary Kubernetes Secret YAML with the plaintext value:**
-    *(Replace `YOUR_PLAINTEXT_VALUE` with the actual secret value, and `SECRET_KEY_NAME` with the key name used in your secret, e.g., `PIHOLE_WEBPASSWORD`)*
-    ```bash
-    kubectl create secret generic <SECRET_NAME> --namespace <NAMESPACE> --from-literal=<SECRET_KEY_NAME>='YOUR_PLAINTEXT_VALUE' --dry-run=client -o yaml > /tmp/temp-secret.yaml
-    ```
-    *(Example for Homepage Pi-hole password: `kubectl create secret generic homepage-secret --namespace homepage --from-literal=PIHOLE_WEBPASSWORD='PASSWORD' --dry-run=client -o yaml > /tmp/homepage-secret-temp.yaml`)*
-
-3.  **Seal the temporary Secret into a `SealedSecret`:**
-    *(Replace `<SECRET_NAME>`, `<NAMESPACE>`, and `sealed-secret-file` path as appropriate)*
-    ```bash
-    kubeseal --cert pub-cert.pem \
-             --controller-name sealed-secrets \
-             --controller-namespace kube-system \
-             --sealed-secret-file <PATH_TO_YOUR_SEALED_SECRET_YAML> \
-             < /tmp/temp-secret.yaml
-    ```
-    *(Example for Homepage Pi-hole password: `kubeseal --cert /Users/kris/Dev/personal/homelab/apps/base/homepage/pub-cert.pem --controller-name sealed-secrets --controller-namespace kube-system --sealed-secret-file /Users/kris/Dev/personal/homelab/apps/base/homepage/sealed-homepage-secret.yaml < /tmp/homepage-secret-temp.yaml`)*
-
-4.  **Apply the updated `SealedSecret` to your cluster:**
-    ```bash
-    kubectl apply -f <PATH_TO_YOUR_SEALED_SECRET_YAML>
-    ```
-    *(Example: `kubectl apply -f /Users/kris/Dev/personal/homelab/apps/base/homepage/sealed-homepage-secret.yaml`)*
-
-5.  **Restart the affected deployment/pod:**
-    ```bash
-    kubectl rollout restart deployment/<YOUR_DEPLOYMENT_NAME> -n <NAMESPACE>
-    ```
-    *(Example: `kubectl rollout restart deployment/homepage -n homepage`)*
-
-## 7. Accessing Longhorn Dashboard
-
-To access the Longhorn dashboard, ensure you have applied the `longhorn-ingress.yaml` manifest:
-
-```bash
-kubectl apply -f infrastructure/longhorn/ingress.yaml
-```
-
-Then, add an entry to your local `/etc/hosts` file (or your local DNS server) to resolve `cwk.longhorn` to the IP address of your Cilium Ingress controller. You can find this IP by checking the status of the `longhorn-ingress`:
-
-```bash
-kubectl get ingress -n longhorn-system longhorn-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-```
-
-Once resolved, navigate to `http://cwk.longhorn` in your web browser.
+| Application                       | Description                                                                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Blog**                          | A personal blog built with Hugo, a fast and modern static site generator.                                                                   |
+| **Utility Consumption Dashboard** | A custom dashboard built with Go and HTMX that consumes data from provider smart meter APIs to visualize utility usage and costs.           |
+| **Financial Tracking System**   | A personal finance tracker that integrates with the self-hosted Ollama models for intelligent data analysis and categorization. |
