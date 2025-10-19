@@ -26,7 +26,7 @@ data:
         - Proxmox VE:
             href: http://192.168.1.254:8006/
             description: Virtualization Management
-            icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/proxmox.png
+            icon: proxmox.png
         - pgAdmin:
             href: http://cwk.pgadmin/
             description: Database GUI
@@ -78,7 +78,11 @@ data:
                 href: http://cwk.n8n/
                 description: Workflow Automation
                 icon: n8n.svg
-
+        - AI:
+            - OpenWebUI:
+                href: http://cwk.openwebui/
+                description: Self-hosted Web UI for LLMs
+                icon: open-webui.svg
   widgets.yaml: |
     - kubernetes:
         cluster:
