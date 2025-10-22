@@ -27,13 +27,3 @@ metadata:
 spec:
   interval: 1h
   url: https://charts.external-secrets.io
----
-# Bitnami Helm charts, used for Sealed Secrets.
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: bitnami
-  namespace: flux-system
-spec:
-  interval: 1h
-  url: https://charts.bitnami.com/bitnami
