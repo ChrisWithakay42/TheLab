@@ -1,12 +1,3 @@
-# Official Helm chart for Longhorn distributed block storage.
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: longhorn
-  namespace: flux-system
-spec:
-  interval: 1h
-  url: https://charts.longhorn.io
 ---
 # Official HashiCorp Helm charts, used for Vault.
 apiVersion: source.toolkit.fluxcd.io/v1
