@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  # The name here MUST match the name in the HelmRelease's 'valuesFrom' section
+  name: longhorn-helm-values
+  namespace: longhorn-system
+stringData:
+  # This key holds the actual Helm values
+  values.yaml: |
+    csi:
+      attacherReplicaCount: 3
+      provisionerReplicaCount: 3
+      resizerReplicaCount: 3
+      snapshotterReplicaCount: 3
+    longhornUI:
+      replicas: 2
+    defaultSettings:
+      backupTarget: "s3://HomeLab-Kubernetes-DBs@eu-central-003/longhorn/"
+      backupTargetCredentialSecret: "longhorn-backup-target-secret"
