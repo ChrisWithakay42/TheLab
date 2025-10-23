@@ -1,0 +1,34 @@
+# Cilium Helm values translated from CLI flags
+
+# Use eBPF to replace kube-proxy
+kubeProxyReplacement: "true"
+
+# Enable L2 IPAM to provide IPs for LoadBalancer services
+l2announcements:
+  enabled: true
+
+# Enable support for external IPs on services
+externalIPs:
+  enabled: true
+
+# Enable Hubble for network observability
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+
+# Use Maglev for consistent hashing for backend selection
+loadBalancer:
+  algorithm: "maglev"
+
+# Use Kubernetes host-scope IPAM mode
+ipam:
+  mode: "kubernetes"
+
+# Enable the Cilium Ingress Controller
+ingressController:
+  enabled: true
+  defaultLoadbalancerMode: "shared"
+  service:
+    type: "LoadBalancer"
