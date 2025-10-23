@@ -14,6 +14,29 @@ stringData:
       snapshotterReplicaCount: 3
     longhornUI:
       replicas: 2
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+    longhornManager:
+      resources:
+        requests:
+          cpu: 250m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+    longhornDriver:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
     defaultSettings:
       backupTarget: "s3://HomeLab-Kubernetes-DBs@eu-central-003/longhorn/"
       backupTargetCredentialSecret: "longhorn-backup-target-secret"
