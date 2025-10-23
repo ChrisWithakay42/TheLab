@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: vault # Ensure the generated ConfigMap is in the correct namespace
+configMapGenerator:
+- name: vault-values
+  files:
+  - values.yaml
+generatorOptions:
+  disableNameSuffixHash: true
