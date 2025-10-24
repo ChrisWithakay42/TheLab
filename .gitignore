@@ -8,3 +8,4 @@ infrastructure/longhorn/longhorn-backblaze-b2-setup.md
 master.key
 unseal-key.txt
 README_vault_migration.md
+admin/**

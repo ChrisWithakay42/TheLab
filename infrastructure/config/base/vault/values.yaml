@@ -1,0 +1,58 @@
+# values.yaml for Vault to be used with ESO
+global:
+  enabled: true
+  # In production setup, set tlsDisable to false and configure TLS certificates.
+  tlsDisable: true
+
+# Configure the Vault server component
+server:
+  ha:
+    enabled: true
+    replicas: 3
+    raft:
+      enabled: true
+      # This setting lets the Helm chart correctly set the node_id for each Vault pod.
+      setNodeId: true
+      config: |
+        ui = true
+        listener "tcp" {
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+          tls_disable = "true"
+        }
+        storage "raft" {
+          path = "/vault/data"
+          retry_join {
+            leader_api_addr = "http://vault-0.vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-1.vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-2.vault-internal:8200"
+          }
+        }
+
+  # --- PERSISTENT STORAGE CONFIGURATION ---
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: "longhorn"
+
+  # Set resource requests and limits for the Vault pods
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+injector:
+  enabled: false
+
+# Enable the Vault UI
+ui:
+  enabled: true
+  service:
+    type: "ClusterIP" 

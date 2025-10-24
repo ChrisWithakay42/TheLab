@@ -1,0 +1,30 @@
+# infrastructure/controllers/base/longhorn/release.yaml
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: longhorn
+  namespace: longhorn-system
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: longhorn
+      version: "1.6.2" 
+      sourceRef:
+        kind: HelmRepository
+        name: longhorn
+        namespace: flux-system
+  install:
+    createNamespace: true
+  upgrade:
+    remediation:
+      retries: 3
+  
+  # This section ensures Longhorn is only installed AFTER Sealed Secrets is ready.
+  dependsOn:
+    - name: sealed-secrets 
+      namespace: kube-system
+
+  valuesFrom:
+    - kind: Secret
+      name: longhorn-helm-values
