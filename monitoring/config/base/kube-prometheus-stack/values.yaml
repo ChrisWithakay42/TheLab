@@ -1,0 +1,80 @@
+# Disable Grafana as it's managed separately
+grafana:
+  enabled: false
+
+# Configure Prometheus
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: longhorn
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1
+        memory: 2Gi
+
+# Configure Alertmanager
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: longhorn
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 2Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+# Enable Ingress for Prometheus and Alertmanager
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: cilium
+    hosts:
+      - "cwk.prometheus"
+    paths:
+      - /
+    pathType: Prefix
+
+alertmanager:
+  ingress:
+    enabled: true
+    ingressClassName: cilium
+    hosts:
+      - "cwk.alertmanager"
+    paths:
+      - /
+    pathType: Prefix
