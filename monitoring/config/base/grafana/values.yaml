@@ -1,0 +1,48 @@
+replicaCount: 1
+
+image:
+  repository: grafana/grafana
+  tag: "10.2.0"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+podSecurityContext:
+  fsGroup: 472
+
+admin:
+  existingSecret: "grafana-secret"
+  userKey: "GF_SECURITY_ADMIN_USER"
+  passwordKey: "GF_SECURITY_ADMIN_PASSWORD"
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-operated.monitoring.svc.cluster.local:9090
+      access: proxy
+      isDefault: true
+
+persistence:
+  enabled: true
+  type: pvc
+  storageClassName: "longhorn"
+  size: 5Gi
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  ingressClassName: "cilium"
+  hosts:
+    - "cwk.grafana"
+  path: "/"
