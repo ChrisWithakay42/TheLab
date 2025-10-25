@@ -1,0 +1,19 @@
+# Loki Helm values for a single-binary deployment
+
+loki:
+  deploymentMode: SingleBinary
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+
+persistence:
+  enabled: true
+  storageClassName: "longhorn"
+  size: 10Gi
+
+ingress:
+  enabled: false
