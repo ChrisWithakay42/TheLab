@@ -1,0 +1,87 @@
+# Graylog Helm values translated from existing manifests
+
+replicaCount: 1
+updateStrategy:
+  type: Recreate
+
+image:
+  repository: graylog/graylog
+  tag: "5.2"
+
+# Disable the packaged MongoDB and Elasticsearch from the Bitnami chart
+mongodb:
+  enabled: false
+elasticsearch:
+  enabled: false
+
+# Configure connection to external databases
+externalMongodb:
+  uri: "mongodb://admin:password@mongo.graylog-db.svc.cluster.local:27017/graylog?authSource=admin"
+externalElasticsearch:
+  hosts:
+    - opensearch.opensearch.svc.cluster.local
+  port: 9200
+
+# Root user password and secret
+auth:
+  existingSecret: "graylog-secret"
+  rootPasswordKey: "GRAYLOG_ROOT_PASSWORD_SHA2"
+  passwordSecretKey: "GRAYLOG_PASSWORD_SECRET"
+
+# Journal is disabled in the old deployment
+journal:
+  enabled: false
+
+# Replicate the init container
+initContainers:
+  - name: chown-journal
+    image: busybox:latest
+    command: ["sh", "-c", "chown -R 1100:1100 /usr/share/graylog/data/journal"]
+    volumeMounts:
+    - name: data
+      mountPath: /usr/share/graylog/data/journal
+
+podSecurityContext:
+  fsGroup: 1100
+
+resources:
+  requests:
+    memory: "1Gi"
+    cpu: "250m"
+  limits:
+    memory: "1.5Gi"
+    cpu: "500m"
+
+# Configure the service as a LoadBalancer
+service:
+  type: LoadBalancer
+  annotations:
+    cilium.io/loadbalancer-ip-pool: main-pool
+  ports:
+    http: 9000
+
+gelf:
+  udp:
+    enabled: true
+    port: 12201
+syslog:
+  udp:
+    enabled: true
+    port: 5140
+beats:
+  tcp:
+    enabled: true
+    port: 5044
+
+ingress:
+  enabled: true
+  ingressClassName: "cilium"
+  hostname: "cwk.graylog"
+  path: "/"
+  service:
+    port: 9000
+
+persistence:
+  enabled: true
+  storageClass: "longhorn"
+  size: 6Gi

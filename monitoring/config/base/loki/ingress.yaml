@@ -1,18 +1,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: graylog
-  namespace: graylog
+  name: loki
+  namespace: monitoring
 spec:
   ingressClassName: cilium
   rules:
-    - host: "cwk.graylog"
+    - host: "cwk.loki"
       http:
         paths:
           - path: "/"
             pathType: Prefix
             backend:
               service:
-                name: graylog
+                name: loki
                 port:
-                  number: 9000
+                  number: 3100
