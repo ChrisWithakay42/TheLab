@@ -3,6 +3,7 @@ kind: Kustomization
 metadata:
   name: infrastructure-controllers
   namespace: flux-system
+spec:
   interval: 1m
   retryInterval: 1m
   timeout: 5m
