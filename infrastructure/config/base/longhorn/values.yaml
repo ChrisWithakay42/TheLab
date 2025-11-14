@@ -38,5 +38,5 @@ stringData:
           cpu: 200m
           memory: 256Mi
     defaultSettings:
-      backupTarget: "s3://HomeLab-Kubernetes-DBs@eu-central-003/longhorn/"
+      backupTarget: "s3://HomeLab-Kubernetes-DBs/longhorn/"
       backupTargetCredentialSecret: "longhorn-backup-target-secret"

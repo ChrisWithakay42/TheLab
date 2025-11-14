@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - values.yaml
   - backup-job.yaml
-  - backup-secret.yaml
+  - external-secret.yaml
   - backup-target.yaml
   - ingress.yaml
   - snapshot-job.yaml
