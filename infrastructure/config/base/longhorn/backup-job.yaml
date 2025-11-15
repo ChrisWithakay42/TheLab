@@ -10,3 +10,4 @@ spec:
   groups:
   - default
   concurrency: 1
+  labels: {}
