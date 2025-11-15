@@ -3,9 +3,3 @@ kind: Kustomization
 namespace: external-secrets
 resources:
   - cluster-secret-store.yaml
-configMapGenerator:
-- name: external-secrets-values
-  files:
-  - values.yaml
-generatorOptions:
-  disableNameSuffixHash: true
