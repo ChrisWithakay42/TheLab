@@ -10,4 +10,5 @@ spec:
   groups:
   - default
   concurrency: 1
-  labels: {}
+  labels: 
+    longhorn-backup: "true"
