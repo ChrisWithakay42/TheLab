@@ -20,11 +20,6 @@ spec:
     remediation:
       retries: 3
   
-  # This section ensures Longhorn is only installed AFTER Sealed Secrets is ready.
-  dependsOn:
-    - name: sealed-secrets 
-      namespace: kube-system
-
   valuesFrom:
     - kind: Secret
       name: longhorn-helm-values
