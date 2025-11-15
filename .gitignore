@@ -9,3 +9,4 @@ master.key
 unseal-key.txt
 README_vault_migration.md
 admin/**
+deploy/crds
