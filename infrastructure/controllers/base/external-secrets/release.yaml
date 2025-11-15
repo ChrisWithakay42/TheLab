@@ -23,8 +23,6 @@ spec:
   
   # CRITICAL: This ensures Vault is ready before ESO tries to install.
   dependsOn:
-    - name: vault
-      namespace: vault
     - name: external-secrets-crds
       namespace: external-secrets
 
