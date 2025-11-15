@@ -16,6 +16,23 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: longhorn-crds
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infrastructure/controllers/base/longhorn-crds
+  prune: true
+  dependsOn:
+    - name: infrastructure-controllers
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: longhorn-config
   namespace: flux-system
 spec:
@@ -28,7 +45,7 @@ spec:
   path: ./infrastructure/config/base/longhorn
   prune: true
   dependsOn:
-    - name: infrastructure-controllers
+    - name: longhorn-crds
 ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
