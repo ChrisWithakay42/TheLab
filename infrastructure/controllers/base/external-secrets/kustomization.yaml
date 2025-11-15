@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - release.yaml
   - namespace.yaml
-  - crd-release.yaml
   - repository.yaml
+  # - crd-release.yaml

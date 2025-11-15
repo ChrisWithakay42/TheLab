@@ -2,31 +2,21 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: external-secrets
-  namespace: external-secrets
+  namespace: flux-system
 spec:
-  interval: 15m
+  releaseName: external-secrets
+  targetNamespace: external-secrets
+  interval: 10m
   chart:
     spec:
       chart: external-secrets
-      version: "0.20.3" 
+      version: 0.20.3
       sourceRef:
         kind: HelmRepository
         name: external-secrets
         namespace: flux-system
+  values:
+    installCRDs: true
+
   install:
     createNamespace: true
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
-  
-  # CRITICAL: This ensures Vault is ready before ESO tries to install.
-  dependsOn:
-    - name: external-secrets-crds
-      namespace: external-secrets
-
-  valuesFrom:
-    - kind: ConfigMap
-      name: external-secrets-values
-      valuesKey: values.yaml
