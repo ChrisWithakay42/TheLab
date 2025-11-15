@@ -7,5 +7,8 @@ spec:
   cron: "0 3 * * *"
   task: "backup"
   retain: 5
+  groups:
+  - default
+  concurrency: 1
   labels:
     longhorn-backup: "true"
