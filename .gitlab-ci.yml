@@ -7,7 +7,7 @@ stages:
 yaml-lint:
   stage: lint
   tags:
-    - home-lab # Ensure this job runs on the self-hosted runner
+    - home-lab 
   script:
     - echo "Running yamllint on all YAML files..."
     - yamllint .
