@@ -1,0 +1,15 @@
+# .gitlab-ci.yml
+image: registry.gitlab.com/homelab1165334/containers/multiaarch-homelab-runner:latest
+
+stages:
+  - lint
+
+yaml-lint:
+  stage: lint
+  script:
+    - echo "Running yamllint on all YAML files..."
+    - yamllint .
+  rules:
+    - changes:
+        - "**/*.yaml"
+        - "**/*.yml"
