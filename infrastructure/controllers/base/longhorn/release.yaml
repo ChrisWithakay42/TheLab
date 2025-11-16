@@ -21,5 +21,8 @@ spec:
       retries: 3
   values:
     defaultSettings:
-      backupTarget: "https://s3.eu-central-003.backblazeb2.com/HomeLab-Kubernetes-DBs/longhorn/"
+      backupTarget: "s3://HomeLab-Kubernetes-DBs/longhorn/"
       backupTargetCredentialSecret: "longhorn-backup-target-secret"
+      s3:
+        endpoint: "https://s3.eu-central-003.backblazeb2.com"
+        region: "eu-central-003"
