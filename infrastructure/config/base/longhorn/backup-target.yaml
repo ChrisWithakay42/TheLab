@@ -4,5 +4,5 @@ metadata:
   name: default
   namespace: longhorn-system
 spec:
-  backupTargetURL: s3://HomeLab-Kubernetes-DBs@eu-central-003/longhorn/
+  backupTargetURL: https://s3.eu-central-003.backblazeb2.com/HomeLab-Kubernetes-DBs/longhorn/
   credentialSecret: longhorn-backup-target-secret
