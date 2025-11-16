@@ -1,5 +1,5 @@
 # .gitlab-ci.yml
-image: registry.gitlab.com/homelab1165334/containers/multiaarch-homelab-runner
+image: registry.gitlab.com/homelab1165334/containers/multiaarch-homelab-runner:latest
 
 stages:
   - lint
