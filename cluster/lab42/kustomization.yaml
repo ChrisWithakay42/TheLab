@@ -4,4 +4,4 @@ resources:
   # - apps.yaml
   # - databases.yaml
   - infrastructure.yaml
-  # - monitoring.yaml
+  - monitoring.yaml
