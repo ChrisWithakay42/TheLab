@@ -4,6 +4,7 @@ namespace: monitoring
 resources:
   - external-secret.yaml
   - ingress.yaml
+  - monitoring-rbac.yaml
 configMapGenerator:
 - name: grafana-values
   files:
