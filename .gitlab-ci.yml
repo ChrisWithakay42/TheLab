@@ -1,12 +1,19 @@
 image: registry.gitlab.com/homelab1165334/containers/multiaarch-homelab-runner:latest
 
+# Set GIT_DEPTH to 0 to fetch the full project history.
+# This is required to compare the feature branch with the main branch.
+variables:
+  GIT_DEPTH: 0
+
 stages:
   - lint
+  - deploy_review
+  - cleanup_review
 
 yaml-lint:
   stage: lint
   tags:
-    - home-lab 
+    - home-lab
   script:
     - echo "Running yamllint on all YAML files..."
     - yamllint .
@@ -14,3 +21,74 @@ yaml-lint:
     - changes:
         - "**/*.yaml"
         - "**/*.yml"
+
+deploy_review:
+  stage: deploy_review
+  tags:
+    - home-lab
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    on_stop: cleanup_review
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - apps/base/**/* # Run this job if anything inside apps/base changes
+  script:
+    - |
+      set -e
+      NAMESPACE="$CI_COMMIT_REF_SLUG"
+      echo "Deploying review apps to namespace: $NAMESPACE"
+      kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+
+      # Find all unique application directories that have changed compared to the main branch
+      CHANGED_DIRS=$(git diff --name-only "origin/$CI_DEFAULT_BRANCH...$CI_COMMIT_SHA" | grep -oE 'apps/base/[^/]+' | sort -u)
+
+      if [ -z "$CHANGED_DIRS" ]; then
+        echo "No changes found in any 'apps/base/*' directory. Nothing to deploy."
+        exit 0
+      fi
+
+      echo "Detected changes in the following app directories:"
+      echo "$CHANGED_DIRS"
+
+      # Loop through each changed directory and deploy the application
+      for APP_DIR in $CHANGED_DIRS; do
+        echo "--- Deploying application from $APP_DIR ---"
+        APP_NAME=$(basename "$APP_DIR")
+        REVIEW_HOST="$APP_NAME-$NAMESPACE.homelab.local"
+
+        # Render the final Kubernetes manifests using kustomize
+        kustomize build "$APP_DIR" > "/tmp/${APP_NAME}-rendered.yaml"
+
+        # Find the original hostname from the Ingress resource in the rendered manifests
+        ORIGINAL_HOST=$(grep -oP '(?<=host: ).*' "/tmp/${APP_NAME}-rendered.yaml" | head -n 1)
+
+        if [ -z "$ORIGINAL_HOST" ]; then
+          echo "WARNING: Could not find 'host:' in the rendered manifests for $APP_NAME. Deploying without Ingress modification."
+          cat "/tmp/${APP_NAME}-rendered.yaml" | kubectl apply -n "$NAMESPACE" -f -
+        else
+          echo "Replacing original host '$ORIGINAL_HOST' with review host '$REVIEW_HOST'"
+          # Use 'sed' to substitute the original hostname with our new dynamic one, then apply
+          sed "s/$ORIGINAL_HOST/$REVIEW_HOST/g" "/tmp/${APP_NAME}-rendered.yaml" | kubectl apply -n "$NAMESPACE" -f -
+          echo "Review app for $APP_NAME deployed to http://$REVIEW_HOST"
+        fi
+      done
+
+cleanup_review:
+  stage: cleanup_review
+  tags:
+    - home-lab
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    action: stop
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: manual
+      allow_failure: true
+  script:
+    - |
+      set -e
+      NAMESPACE="$CI_COMMIT_REF_SLUG"
+      echo "Cleaning up review app from namespace: $NAMESPACE"
+      kubectl delete namespace "$NAMESPACE"
+      echo "Review app namespace $NAMESPACE deleted."
