@@ -39,3 +39,10 @@ spec:
       service:
         type: LoadBalancer
         loadBalancerMode: shared
+    tolerations:
+    - key: "node.kubernetes.io/not-ready"
+      operator: "Exists"
+      effect: "NoExecute"
+    - key: "node.kubernetes.io/not-ready"
+      operator: "Exists"
+      effect: "NoSchedule"
