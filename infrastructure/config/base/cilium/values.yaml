@@ -24,6 +24,6 @@ ipam:
 # Enable the Cilium Ingress Controller
 ingressController:
   enabled: true
-  defaultLoadbalancerMode: "shared"
   service:
     type: "LoadBalancer"
+    loadBalancerMode: "shared"
