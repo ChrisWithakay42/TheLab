@@ -19,7 +19,23 @@ spec:
   upgrade:
     remediation:
       retries: 3
-  valuesFrom:
-    - kind: ConfigMap
-      name: cilium-values
-      valuesKey: values.yaml
+  values:
+    kubeProxyReplacement: true
+    l2announcements:
+      enabled: true
+    externalIPs:
+      enabled: true
+    hubble:
+      relay:
+        enabled: true
+      ui:
+        enabled: true
+    loadBalancer:
+      algorithm: maglev
+    ipam:
+      mode: kubernetes
+    ingressController:
+      enabled: true
+      service:
+        type: LoadBalancer
+        loadBalancerMode: shared
