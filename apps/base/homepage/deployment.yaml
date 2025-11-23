@@ -73,4 +73,3 @@ spec:
             name: homepage
         - name: logs
           emptyDir: {}
-
