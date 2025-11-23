@@ -16,7 +16,7 @@ yaml-lint:
     - home-lab
   script:
     - echo "Running yamllint on all YAML files..."
-    - yamllint .
+    - yamllint --strict 0 .
   rules:
     - changes:
         - "**/*.yaml"
