@@ -57,8 +57,8 @@ deploy_review:
         APP_NAME=$(basename "$APP_DIR")
         REVIEW_HOST="$APP_NAME-$NAMESPACE.homelab.local"
 
-        # Use kustomize to set the namespace for all resources
-        kustomize edit set namespace "$NAMESPACE" "$APP_DIR"
+        # Change into the app directory to set the namespace, run in a subshell to avoid changing the working directory of the script
+        (cd "$APP_DIR" && kustomize edit set namespace "$NAMESPACE")
 
         # Render the final Kubernetes manifests using kustomize
         kustomize build "$APP_DIR" > "/tmp/${APP_NAME}-rendered.yaml"
