@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: homepage
 resources:
-  - namespace.yaml
   - cluster_role.yaml
   - service_account.yaml
   - config_map.yaml

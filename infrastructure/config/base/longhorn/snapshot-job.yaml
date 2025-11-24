@@ -12,4 +12,3 @@ spec:
   - default
   labels:
     longhorn-backup: "true"
-

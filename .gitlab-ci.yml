@@ -16,7 +16,7 @@ yaml-lint:
     - home-lab
   script:
     - echo "Running yamllint on all YAML files..."
-    - yamllint .
+    - yamllint --no-warnings .
   rules:
     - changes:
         - "**/*.yaml"
@@ -57,19 +57,23 @@ deploy_review:
         APP_NAME=$(basename "$APP_DIR")
         REVIEW_HOST="$APP_NAME-$NAMESPACE.homelab.local"
 
+        # Change into the app directory to set the namespace, run in a subshell to avoid changing the working directory of the script
+        (cd "$APP_DIR" && kustomize edit set namespace "$NAMESPACE")
+
         # Render the final Kubernetes manifests using kustomize
         kustomize build "$APP_DIR" > "/tmp/${APP_NAME}-rendered.yaml"
 
         # Find the original hostname from the Ingress resource in the rendered manifests
-        ORIGINAL_HOST=$(grep -oP '(?<=host: ).*' "/tmp/${APP_NAME}-rendered.yaml" | head -n 1)
+        ORIGINAL_HOST=$(grep -Eo 'host: [^ ]+' "/tmp/${APP_NAME}-rendered.yaml" | head -n 1 | sed 's/host: //')
 
         if [ -z "$ORIGINAL_HOST" ]; then
           echo "WARNING: Could not find 'host:' in the rendered manifests for $APP_NAME. Deploying without Ingress modification."
-          cat "/tmp/${APP_NAME}-rendered.yaml" | kubectl apply -n "$NAMESPACE" -f -
+          # Apply the manifests. Kustomize has already set the namespace.
+          kubectl apply -f "/tmp/${APP_NAME}-rendered.yaml"
         else
           echo "Replacing original host '$ORIGINAL_HOST' with review host '$REVIEW_HOST'"
           # Use 'sed' to substitute the original hostname with our new dynamic one, then apply
-          sed "s/$ORIGINAL_HOST/$REVIEW_HOST/g" "/tmp/${APP_NAME}-rendered.yaml" | kubectl apply -n "$NAMESPACE" -f -
+          sed "s/$ORIGINAL_HOST/$REVIEW_HOST/g" "/tmp/${APP_NAME}-rendered.yaml" | kubectl apply -f -
           echo "Review app for $APP_NAME deployed to http://$REVIEW_HOST"
         fi
       done

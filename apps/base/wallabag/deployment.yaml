@@ -43,5 +43,3 @@ spec:
         - name: wallabag-data
           persistentVolumeClaim:
             claimName: wallabag-pvc
-
-
