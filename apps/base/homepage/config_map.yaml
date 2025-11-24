@@ -22,10 +22,10 @@ data:
               href: https://github.com/
   services.yaml: |
     - HomeLab:
-        - Proxmox VE:
-            href: http://192.168.1.254:8006/
-            description: Virtualization Management
-            icon: proxmox.png
+        # - Proxmox VE:
+        #     href: http://192.168.1.254:8006/
+        #     description: Virtualization Management
+        #     icon: proxmox.png
         - pgAdmin:
             href: http://cwk.pgadmin/
             description: Database GUI
