@@ -52,7 +52,13 @@ spec:
           volumeMounts:
             - name: pihole-storage
               mountPath: /etc/pihole
+            - name: pihole-tls
+              mountPath: /etc/pihole/tls.pem
+              subPath: tls.pem
       volumes:
         - name: pihole-storage
           persistentVolumeClaim:
             claimName: pihole-pvc
+        - name: pihole-tls
+          secret:
+            secretName: pihole-tls
