@@ -24,6 +24,13 @@ spec:
       containers:
         - name: pihole
           image: pihole/pihole:latest
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - "cat /etc/pihole-tls/tls.crt /etc/pihole-tls/tls.key > /etc/pihole/tls.pem"
       #     # --- START: ADDITION FOR DHCP PERMISSIONS ---
       #     securityContext:
       #       capabilities:
@@ -53,8 +60,8 @@ spec:
             - name: pihole-storage
               mountPath: /etc/pihole
             - name: pihole-tls
-              mountPath: /etc/pihole/tls.pem
-              subPath: tls.pem
+              mountPath: /etc/pihole-tls
+              readOnly: true
       volumes:
         - name: pihole-storage
           persistentVolumeClaim:
