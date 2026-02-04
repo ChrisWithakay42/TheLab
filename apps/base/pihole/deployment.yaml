@@ -58,4 +58,3 @@ spec:
         - name: pihole-storage
           persistentVolumeClaim:
             claimName: pihole-pvc
-
