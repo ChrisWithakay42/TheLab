@@ -19,6 +19,8 @@ spec:
     spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+      nodeSelector:
+        kubernetes.io/hostname: hp-worker-1
       containers:
         - name: pihole
           image: pihole/pihole:latest
