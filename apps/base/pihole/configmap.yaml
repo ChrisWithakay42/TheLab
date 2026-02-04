@@ -7,5 +7,6 @@ data:
   TZ: "Europe/London"
   PIHOLE_DNS_1: "1.1.1.1"
   PIHOLE_DNS_2: "1.0.0.1"
+  VIRTUAL_HOST: "cwk.pihole"
   CORS_HOSTS: "pihole.pihole,pihole.pihole.svc,cwk.pihole"
   FTLCONF_dns_listeningMode: "all"
