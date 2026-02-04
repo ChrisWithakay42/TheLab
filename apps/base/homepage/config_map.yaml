@@ -49,7 +49,7 @@ data:
                 description: NetGear Switch
                 icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/netgear-light.svg
             - Unifi:
-                href: https://192.168.1.133:8443/
+                href: https://192.168.1.130:8443/
                 description: Unifi Controller
                 icon: unifi.svg
 
