@@ -17,18 +17,20 @@ spec:
       labels:
         app: pihole
     spec:
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
-      nodeSelector:
-        kubernetes.io/hostname: hp-worker-1
+      # --- START: ADDITIONS FOR DHCP ---
+      # hostNetwork: true
+      # dnsPolicy: ClusterFirstWithHostNet
+      # # --- END: ADDITIONS FOR DHCP ---
       containers:
         - name: pihole
           image: pihole/pihole:latest
 
-          securityContext:
-            capabilities:
-              add:
-                - NET_ADMIN
+      #     # --- START: ADDITION FOR DHCP PERMISSIONS ---
+      #     securityContext:
+      #       capabilities:
+      #         add:
+      #           - NET_ADMIN
+      #     # --- END: ADDITION FOR DHCP PERMISSIONS ---
           envFrom:
             - configMapRef:
                 name: pihole-config
