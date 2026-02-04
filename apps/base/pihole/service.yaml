@@ -6,8 +6,7 @@ metadata:
   annotations:
     cilium.io/loadbalancer-ip-pool: main-pool
 spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
+  type: ClusterIP
   selector:
     app: pihole
   ports:
