@@ -16,4 +16,3 @@ spec:
                 name: pihole
                 port:
                   number: 80
-
