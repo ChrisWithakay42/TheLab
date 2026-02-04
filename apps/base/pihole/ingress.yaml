@@ -16,7 +16,4 @@ spec:
                 name: pihole
                 port:
                   number: 80
-  tls:
-    - hosts:
-        - cwk.pihole
-      secretName: pihole-tls
+
