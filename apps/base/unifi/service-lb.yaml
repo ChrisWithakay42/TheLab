@@ -7,7 +7,6 @@ metadata:
     cilium.io/loadbalancer-ip-pool: main-pool
 spec:
   type: LoadBalancer
-  externalTrafficPolicy: Local
   selector:
     app: unifi
   ports:
