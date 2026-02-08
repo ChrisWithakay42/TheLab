@@ -18,18 +18,18 @@ spec:
         app: pihole
     spec:
       # --- START: ADDITIONS FOR DHCP ---
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
+      # hostNetwork: true
+      # dnsPolicy: ClusterFirstWithHostNet
       # --- END: ADDITIONS FOR DHCP ---
       containers:
         - name: pihole
           image: pihole/pihole:latest
 
       #     # --- START: ADDITION FOR DHCP PERMISSIONS ---
-          securityContext:
-            capabilities:
-              add:
-                - NET_ADMIN
+          # securityContext:
+          #   capabilities:
+          #     add:
+          #       - NET_ADMIN
       #     # --- END: ADDITION FOR DHCP PERMISSIONS ---
           envFrom:
             - configMapRef:
