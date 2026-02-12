@@ -36,13 +36,12 @@ data:
                 description: Vodafone Router
                 icon: https://cdn.jsdelivr.net/npm/@mdi/svg/svg/router-wireless.svg
             - Pi-hole:
-                href: http://cwk.pihole/admin/
+                href: http://192.168.1.5/admin/
                 description: Ad-blocking DNS
                 icon: pi-hole.svg
                 widget:
                   type: pihole
                   version: 6
-                  url: http://pihole.pihole/
                   key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
             - NetGear switch:
                 href: http://192.168.1.10/
