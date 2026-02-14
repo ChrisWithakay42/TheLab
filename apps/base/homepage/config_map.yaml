@@ -31,6 +31,10 @@ data:
             description: Database GUI
             icon: pgadmin.svg
         - Network:
+            - Unifi:
+                href: https://192.168.1.130:8443/
+                description: Unifi Controller
+                icon: unifi.svg
             - Vodafone router:
                 href: http://192.168.1.1/
                 description: Vodafone Router
@@ -43,14 +47,6 @@ data:
                   type: pihole
                   version: 6
                   key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
-            - NetGear switch:
-                href: http://192.168.1.10/
-                description: NetGear Switch
-                icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/netgear-light.svg
-            - Unifi:
-                href: https://192.168.1.130:8443/
-                description: Unifi Controller
-                icon: unifi.svg
 
     - Cluster Management:
         - Longhorn:
