@@ -3,10 +3,14 @@ kind: Service
 metadata:
   name: unifi-lb
   namespace: unifi
+  labels:
+    io.cilium/network: mgmt 
   annotations:
-    cilium.io/loadbalancer-ip-pool: main-pool
+    lbipam.cilium.io/ips: "192.168.20.10"
 spec:
   type: LoadBalancer
+  # Tells Cilium to use the L2 Announcement logic for this service
+  loadBalancerClass: io.cilium/l2-announcer 
   selector:
     app: unifi
   ports:
