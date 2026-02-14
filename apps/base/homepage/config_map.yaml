@@ -35,18 +35,19 @@ data:
                 href: https://192.168.1.130:8443/
                 description: Unifi Controller
                 icon: unifi.svg
-            - Vodafone router:
-                href: http://192.168.1.1/
-                description: Vodafone Router
-                icon: https://cdn.jsdelivr.net/npm/@mdi/svg/svg/router-wireless.svg
             - Pi-hole:
                 href: http://192.168.1.5/admin/
                 description: Ad-blocking DNS
                 icon: pi-hole.svg
                 widget:
                   type: pihole
+                  url: https://192.168.1.5
                   version: 6
                   key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+            - Vodafone router:
+                href: http://192.168.1.1/
+                description: Vodafone Router
+                icon: https://cdn.jsdelivr.net/npm/@mdi/svg/svg/router-wireless.svg
 
     - Cluster Management:
         - Longhorn:
