@@ -25,4 +25,3 @@ spec:
   serviceSelector:
     matchLabels:
       io.cilium/network: mgmt
-
