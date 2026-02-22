@@ -22,10 +22,10 @@ data:
               href: https://github.com/
   services.yaml: |
     - HomeLab:
-        # - Proxmox VE:
-        #     href: http://192.168.1.254:8006/
-        #     description: Virtualization Management
-        #     icon: proxmox.png
+        - Proxmox VE:
+            href: http://192.168.1.254:8006/
+            description: Virtualization Management
+            icon: proxmox.png
         - pgAdmin:
             href: http://cwk.pgadmin/
             description: Database GUI
@@ -36,12 +36,12 @@ data:
                 description: Unifi Controller
                 icon: unifi.svg
             - Pi-hole:
-                href: http://192.168.1.5/admin/
+                href: http://192.168.30.5/admin/
                 description: Ad-blocking DNS
                 icon: pi-hole.svg
                 widget:
                   type: pihole
-                  url: https://192.168.1.5
+                  url: https://192.168.30.5
                   version: 6
                   key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
             - Vodafone router:
