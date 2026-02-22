@@ -3,38 +3,38 @@ kind: Service
 metadata:
   name: unifi-lb
   namespace: unifi
-#   labels:
-#     io.cilium/network: mgmt 
-#   annotations:
-#     lbipam.cilium.io/ips: "192.168.20.10"
-# spec:
-#   type: LoadBalancer
-#   # Tells Cilium to use the L2 Announcement logic for this service
-#   loadBalancerClass: io.cilium/l2-announcer 
+  labels:
+    io.cilium/network: mgmt 
+  annotations:
+    lbipam.cilium.io/ips: "192.168.30.10"
+spec:
+  type: LoadBalancer
+  # Tells Cilium to use the L2 Announcement logic for this service
+  loadBalancerClass: io.cilium/l2-announcer 
   selector:
     app: unifi
   ports:
     - name: web-ui
       port: 8443
-      targetPort: web-ui
+      targetPort: 8443
       protocol: TCP
     - name: controller
       port: 8080
-      targetPort: controller
+      targetPort: 8080
       protocol: TCP
     - name: stun
       port: 3478
-      targetPort: stun
+      targetPort: 3478
       protocol: UDP
     - name: discovery
       port: 10001
-      targetPort: discovery
+      targetPort: 10001
       protocol: UDP
     - name: speedtest
       port: 6789
-      targetPort: speedtest
+      targetPort: 6789
       protocol: TCP
     - name: l2-discover
       port: 1900
-      targetPort: l2-discover
+      targetPort: 1900
       protocol: UDP
