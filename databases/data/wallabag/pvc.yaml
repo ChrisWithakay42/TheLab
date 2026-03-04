@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: wallabag-pstgres-pvc
+  name: wallabag-postgres-pvc
   namespace: wallabag-db
   labels:
     longhorn-backup: "true"
