@@ -1,4 +1,4 @@
-apiVersion: "cilium.io/v2alpha1"
+apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: k8s-apps-pool
@@ -12,7 +12,7 @@ spec:
       - {key: io.cilium/network, operator: NotIn, values: [mgmt]}
 ---
 
-apiVersion: "cilium.io/v2alpha1"
+apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: unifi-mgmt-pool
