@@ -5,7 +5,7 @@ metadata:
   name: k8s-apps-pool
 spec:
   blocks:
-    - cidr: "192.168.1.128/26"
+    - cidr: "192.168.40.4/29"
   allowFirstLastIPs: "Yes"
   serviceSelector:
     matchExpressions:
@@ -13,7 +13,6 @@ spec:
 
 ---
 
-# Pool for UniFi / Management (VLAN 20)
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumLoadBalancerIPPool
 metadata:
