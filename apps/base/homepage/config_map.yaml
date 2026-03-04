@@ -73,11 +73,11 @@ data:
                 href: http://cwk.n8n/
                 description: Workflow Automation
                 icon: n8n.svg
-        - AI:
-            - OpenWebUI:
-                href: http://cwk.openwebui/
-                description: Self-hosted Web UI for LLMs
-                icon: open-webui.svg
+        # - AI:
+        #     - OpenWebUI:
+        #         href: http://cwk.openwebui/
+        #         description: Self-hosted Web UI for LLMs
+        #         icon: open-webui.svg
   widgets.yaml: |
     - kubernetes:
         cluster:
