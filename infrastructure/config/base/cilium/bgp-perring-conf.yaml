@@ -1,32 +1,50 @@
 ---
-# 1. The BGP Cluster Configuration (The Handshake)
+# 1. Technical settings (Timers)
+apiVersion: "cilium.io/v2"
+kind: CiliumBGPPeerConfig
+metadata:
+  name: opnsense-peer-config
+spec:
+  timers:
+    holdTimeSeconds: 90
+    keepAliveTimeSeconds: 30
+  families:
+    - afi: ipv4
+      safi: unicast
+
+---
+# 2. Cluster Config (Matches your Pi Nodes)
 apiVersion: "cilium.io/v2"
 kind: CiliumBGPClusterConfig
 metadata:
   name: opnsense-peering
 spec:
   nodeSelector:
-    matchLabels:
-      kubernetes.io/os: linux # Applies to all your Pi nodes
+    matchExpressions:
+      - {key: kubernetes.io/hostname, operator: Exists}
   bgpInstances:
-    - name: "vlan-40-peering"
+    - name: "vlan-40-instance"
       localASN: 64513
       peers:
         - name: "opnsense-router"
-          peerAddress: "192.168.40.1" # Your OPNsense IP on VLAN 40
+          peerAddress: "192.168.40.1"
           peerASN: 64512
+          peerConfigRef:
+            name: "opnsense-peer-config"
 
 ---
-# 2. The Advertisement (The Route Injection)
+# 3. Global Advertisement (No complex selectors)
 apiVersion: "cilium.io/v2"
 kind: CiliumBGPAdvertisement
 metadata:
   name: unifi-ad
 spec:
-  advertisementType: "Service"
-  service:
-    addresses:
-      - LoadBalancerIP
-  selector:
-    matchLabels:
-      app: unifi-controller # Matches the Service label
+  advertisements:
+    - advertisementType: "Service"
+      service:
+        addresses:
+          - LoadBalancerIP
+      selector:
+        matchLabels:
+          # This matches your existing Service label
+          io.cilium/network: mgmt
