@@ -23,7 +23,7 @@ data:
   services.yaml: |
     - HomeLab:
         - Proxmox VE:
-            href: http://192.168.1.254:8006/
+            href: http://192.168.20.30:8006/
             description: Virtualization Management
             icon: proxmox.png
         - pgAdmin:
