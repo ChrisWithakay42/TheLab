@@ -5,8 +5,10 @@ metadata:
   name: k8s-apps-pool
 spec:
   blocks:
-    - cidr: "192.168.40.4/29"
-  allowFirstLastIPs: "Yes"
+    start: "192.168.40.5"
+    end: "192.168.40.10"
+
+  allowFirstLastIPs: "No"
   serviceSelector:
     matchExpressions:
       - {key: io.cilium/network, operator: NotIn, values: [mgmt]}
