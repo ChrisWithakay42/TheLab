@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: unifi
-        image: lscr.io/linuxserver/unifi-network-application:8.2.93
+        image: lscr.io/linuxserver/unifi-network-application:10.1.85
         ports:
         - name: web-ui
           containerPort: 8443
