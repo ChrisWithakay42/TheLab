@@ -4,6 +4,7 @@ namespace: kube-system
 resources:
   - ip-pool.yaml
   - l2policy.yaml
+  - bgp-peering-conf.yaml
 configMapGenerator:
 - name: cilium-values
   files:

@@ -1,0 +1,42 @@
+---
+# 1. Define the IP Pool
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: vlan-30-pool
+spec:
+  blocks:
+    - cidr: "192.168.30.10/32"
+
+---
+# 2. Define the Peering (The Handshake with OPNsense)
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPClusterConfig
+metadata:
+  name: opnsense-peering
+spec:
+  nodeSelector:
+    matchLabels:
+      kubernetes.io/os: linux
+  bgpInstances:
+    - name: "vlan-40-peering"
+      localASN: 64513
+      peers:
+        - name: "opnsense-router"
+          peerAddress: "192.168.40.1" # OPNsense IP on VLAN 40
+          peerASN: 64512
+
+---
+# 3. Define the Advertisement (The "Shout")
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPAdvertisement
+metadata:
+  name: unifi-ad
+spec:
+  advertisementType: "Service"
+  service:
+    addresses:
+      - LoadBalancerIP
+  selector:
+    matchLabels:
+      app: unifi-controller # Matches the Service label

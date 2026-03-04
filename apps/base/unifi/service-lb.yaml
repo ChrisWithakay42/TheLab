@@ -4,13 +4,15 @@ metadata:
   name: unifi-lb
   namespace: unifi
   labels:
-    io.cilium/network: mgmt 
+    app: unifi-controller 
+    io.cilium/network: mgmt
   annotations:
     lbipam.cilium.io/ips: "192.168.30.10"
 spec:
   type: LoadBalancer
-  # Tells Cilium to use the L2 Announcement logic for this service
-  loadBalancerClass: io.cilium/l2-announcer 
+  # REMOVED: loadBalancerClass: io.cilium/l2-announcer 
+  # If no class is specified, Cilium's default LB logic (BGP) takes over.
+  # loadBalancerClass: io.cilium/l2-announcer 
   selector:
     app: unifi
   ports:
@@ -38,3 +40,10 @@ spec:
       port: 1900
       targetPort: 1900
       protocol: UDP
+      
+
+
+
+
+
+
