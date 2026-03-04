@@ -10,9 +10,6 @@ metadata:
     lbipam.cilium.io/ips: "192.168.30.10"
 spec:
   type: LoadBalancer
-  # REMOVED: loadBalancerClass: io.cilium/l2-announcer 
-  # If no class is specified, Cilium's default LB logic (BGP) takes over.
-  # loadBalancerClass: io.cilium/l2-announcer 
   selector:
     app: unifi
   ports:
