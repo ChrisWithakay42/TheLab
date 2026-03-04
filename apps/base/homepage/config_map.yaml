@@ -44,10 +44,6 @@ data:
                   url: https://192.168.30.5
                   version: 6
                   key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
-            - Vodafone router:
-                href: http://192.168.1.1/
-                description: Vodafone Router
-                icon: https://cdn.jsdelivr.net/npm/@mdi/svg/svg/router-wireless.svg
 
     - Cluster Management:
         - Longhorn:
