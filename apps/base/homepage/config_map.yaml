@@ -21,31 +21,34 @@ data:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - HomeLab:
+    - Infrastructure & Core:
+        - Netbox: http://
+            href:
+            description: IPAM/DCIM
+            icon: netbox.png
         - Proxmox VE:
             href: http://192.168.20.30:8006/
             description: Virtualization Management
             icon: proxmox.png
+        - Unifi:
+            href: https://192.168.30.10:8443/
+            description: Unifi Controller
+            icon: unifi.svg
+        - Pi-hole:
+            href: http://192.168.30.5/admin/
+            description: Ad-blocking DNS
+            icon: pi-hole.svg
+            widget:
+               type: pihole
+               url: https://192.168.30.5
+               version: 6
+               key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+
+    - Observability:
         - pgAdmin:
             href: http://cwk.pgadmin/
             description: Database GUI
             icon: pgadmin.svg
-        - Network:
-            - Unifi:
-                href: https://192.168.30.10:8443/
-                description: Unifi Controller
-                icon: unifi.svg
-            - Pi-hole:
-                href: http://192.168.30.5/admin/
-                description: Ad-blocking DNS
-                icon: pi-hole.svg
-                widget:
-                  type: pihole
-                  url: https://192.168.30.5
-                  version: 6
-                  key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
-
-    - Cluster Management:
         - Longhorn:
             href: http://cwk.longhorn/
             description: Cluster Storage Management
@@ -58,7 +61,8 @@ data:
             href: http://cwk.grafana/
             description: Metrics Monitoring
             icon: grafana.svg
-    - Misc:
+
+    - Apps/Services:
         - Reading:
             - Wallabag:
                 href: http://cwk.wallabag
