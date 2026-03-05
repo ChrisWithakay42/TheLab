@@ -22,8 +22,8 @@ data:
               href: https://github.com/
   services.yaml: |
     - Infrastructure & Core:
-        - Netbox: http://192.168.30.30
-            href:
+        - Netbox: 
+            href: http://192.168.30.30
             description: IPAM/DCIM
             icon: netbox.png
         - Proxmox VE:
