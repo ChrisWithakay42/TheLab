@@ -1,5 +1,5 @@
 ---
-# 1. Technical settings (Timers)
+# Peer Configuration (Link happens in the families block)
 apiVersion: "cilium.io/v2"
 kind: CiliumBGPPeerConfig
 metadata:
@@ -11,9 +11,12 @@ spec:
   families:
     - afi: ipv4
       safi: unicast
+      advertisements:
+        matchLabels:
+          advertise: "unifi"
 
 ---
-# 2. Cluster Config (Matches your Pi Nodes)
+#  Cluster Config (Matches all nodes via hostname check)
 apiVersion: "cilium.io/v2"
 kind: CiliumBGPClusterConfig
 metadata:
@@ -33,11 +36,13 @@ spec:
             name: "opnsense-peer-config"
 
 ---
-# 3. Global Advertisement (No complex selectors)
+# Advertisement (Matches your specific service)
 apiVersion: "cilium.io/v2"
 kind: CiliumBGPAdvertisement
 metadata:
   name: unifi-ad
+  labels:
+    advertise: "unifi" # Matches the PeerConfig selector above
 spec:
   advertisements:
     - advertisementType: "Service"
@@ -46,5 +51,6 @@ spec:
           - LoadBalancerIP
       selector:
         matchLabels:
-          # This matches your existing Service label
           io.cilium/network: mgmt
+          # Force Cilium to look in the unifi namespace
+          io.kubernetes.service.namespace: unifi
