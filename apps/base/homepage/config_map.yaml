@@ -22,10 +22,10 @@ data:
               href: https://github.com/
   services.yaml: |
     - Infrastructure & Core:
-        - Netbox: 
-            href: http://192.168.30.30
-            description: IPAM/DCIM
-            icon: netbox.png
+        - OPNSense:
+            href: https//192.168.1.10
+            description: Router/Firewall
+            icon: opnsense.svg
         - Proxmox VE:
             href: http://192.168.20.30:8006/
             description: Virtualization Management
@@ -43,6 +43,10 @@ data:
                url: https://192.168.30.5
                version: 6
                key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+        - Netbox: 
+            href: http://192.168.30.30
+            description: IPAM/DCIM
+            icon: netbox.png
 
     - Observability:
         - pgAdmin:
