@@ -23,7 +23,7 @@ data:
   services.yaml: |
     - Infrastructure & Core:
         - OPNSense:
-            href: https//192.168.1.10
+            href: https://192.168.1.10
             description: Router/Firewall
             icon: opnsense.svg
         - Proxmox VE:
