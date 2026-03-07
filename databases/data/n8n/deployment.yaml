@@ -7,6 +7,8 @@ metadata:
     app: postgres
 spec:
   replicas: 1
+  strategy:
+    type: Recreate # Ensure only 1 pod can write to the disk at a time
   selector:
     matchLabels:
       app: postgres
@@ -15,9 +17,26 @@ spec:
       labels:
         app: postgres
     spec:
+      # Protect the DB from eviction
+      priorityClassName: application-high
       containers:
         - name: postgres
           image: postgres:15
+          # We also set max_connections to prevent n8n from spawning 1000s of threads.
+          args:
+            - "-c"
+            - "shared_buffers=128MB"
+            - "-c"
+            - "max_connections=100"
+            - "-c"
+            - "work_mem=4MB"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"  
+              cpu: "1000m"     
           envFrom:
             - secretRef:
                 name: postgres-secret
@@ -28,6 +47,23 @@ spec:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
               subPath: postgres
+          # --- RPi STABILITY PROBES ---
+          startupProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - "postgres"
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - "postgres"
+            initialDelaySeconds: 10
+            periodSeconds: 10
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:

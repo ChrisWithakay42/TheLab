@@ -7,6 +7,10 @@ metadata:
     app: mongo
 spec:
   replicas: 1
+  # CRITICAL: Ensures the old pod is fully deleted (and volume unmounted) 
+  # before the new one starts. Prevents "Volume already attached" locks on RPi.
+  strategy:
+    type: Recreate 
   selector:
     matchLabels:
       app: mongo
@@ -15,9 +19,24 @@ spec:
       labels:
         app: mongo
     spec:
+      # Protect the Network Database from being killed by lower-priority apps
+      priorityClassName: application-high
       containers:
         - name: mongo
           image: mongo:5.0
+          # We cap the cache at 256MB. UniFi is perfectly happy with this,
+          command:
+            - "mongod"
+            - "--bind_ip_all"
+            - "--wiredTigerCacheSizeGB"
+            - "0.25"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "768Mi"   
+              cpu: "500m"
           envFrom:
             - secretRef:
                 name: mongo-secret
@@ -29,6 +48,12 @@ spec:
               mountPath: /data/db
             - name: mongo-init-scripts
               mountPath: /docker-entrypoint-initdb.d
+          # Gives the Pi5 + Longhorn time to mount the volume without failing health checks
+          startupProbe:
+            tcpSocket:
+              port: mongo
+            failureThreshold: 30
+            periodSeconds: 5
       volumes:
         - name: mongo-storage
           persistentVolumeClaim:

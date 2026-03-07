@@ -15,9 +15,24 @@ spec:
       labels:
         app: mongo
     spec:
+      priorityClassName: application-high
       containers:
         - name: mongo
           image: mongo:5.0
+          # We must tell Mongo to limit its internal cache, otherwise it will ignore 
+          # the K8s limits and trigger a node-level OOM crash.
+          command:
+            - "mongod"
+            - "--bind_ip_all"
+            - "--wiredTigerCacheSizeGB"
+            - "0.25" # Limit internal cache to 256MB
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"   
+              cpu: "500m"     # Mongo is mostly I/O bound, 0.5 core is plenty
           envFrom:
             - secretRef:
                 name: mongo-secret
@@ -27,6 +42,13 @@ spec:
           volumeMounts:
             - name: mongo-storage
               mountPath: /data/db
+          # Added a Startup Probe: DBs on RPi + Longhorn can take 30-60s 
+          # to mount and initialize. This prevents early kills.
+          startupProbe:
+            tcpSocket:
+              port: mongo
+            failureThreshold: 30
+            periodSeconds: 5
       volumes:
         - name: mongo-storage
           persistentVolumeClaim:

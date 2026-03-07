@@ -17,30 +17,44 @@ spec:
       labels:
         app: opensearch
     spec:
+      priorityClassName: application-high
       securityContext:
         fsGroup: 1000
+      initContainers:
+      - name: set-vm-max-map-count
+        image: busybox:1.36
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
       containers:
         - name: opensearch
           image: opensearchproject/opensearch:2.11.0
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "512Mi"  # Bare minimum to start
+              cpu: "100m"
             limits:
-              memory: "2Gi"
+              memory: "1Gi"    # Cap it here to save the  RAM
               cpu: "1000m"
           env:
+            # We use a 512MB Heap. This is the floor for OpenSearch 2.x stability.
             - name: OPENSEARCH_JAVA_OPTS
-              value: "-Xms512m -Xmx512m"
+              value: "-Xms512m -Xmx512m" 
             - name: "discovery.type"
               value: "single-node"
             - name: "plugins.security.disabled"
               value: "true"
+            - name: "node.max_local_storage_nodes"
+              value: "1"
+            - name: "performance_analyzer.enabled"
+              value: "false" # Disabling this saves ~100MB RAM
+            - name: "plugins.ml_common.only_run_on_ml_node"
+              value: "false"
+            - name: "indices.query.bool.max_clause_count"
+              value: "1024"
           ports:
             - containerPort: 9200
               name: http
-            - containerPort: 9600
-              name: transport
           volumeMounts:
             - name: opensearch-data
               mountPath: /usr/share/opensearch/data
