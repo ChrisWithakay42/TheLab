@@ -6,11 +6,12 @@ metadata:
 spec:
   interval: 1h
   retryInterval: 1m
-  timeout: 5m
+  timeout: 10m
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: ./apps/base
   prune: true
+  wait: true
   dependsOn:
-    - name: infrastructure-controllers
+    - name: databases # Only start apps once the data layer is ready

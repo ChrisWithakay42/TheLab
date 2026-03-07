@@ -4,31 +4,16 @@ metadata:
   name: infrastructure-controllers
   namespace: flux-system
 spec:
-  interval: 1m
+  interval: 5m # Increased from 1m to reduce API pressure on RPi during boot
   retryInterval: 1m
-  timeout: 5m
+  timeout: 10m # Increased to give Cilium/Longhorn time to pull images on a cold start
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: ./infrastructure/controllers/base
   prune: true
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: longhorn-config
-  namespace: flux-system
-spec:
-  interval: 1h
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infrastructure/config/base/longhorn
-  prune: true
-  dependsOn:
-    - name: infrastructure-controllers
+  wait: true # WARN: Flux will wait for Cilium to be 'Ready' before moving on.
+             # This solves the "No CNI" deadlock for subsequent pods.
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -44,6 +29,25 @@ spec:
     name: flux-system
   path: ./infrastructure/config/base/cilium
   prune: true
+  wait: true # Ensures BGP/L2 policies are active before apps try to use LoadBalancers
+  dependsOn:
+    - name: infrastructure-controllers
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: longhorn-config
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infrastructure/config/base/longhorn
+  prune: true
+  wait: true # Ensures StorageClasses exist before DBs try to claim volumes
   dependsOn:
     - name: infrastructure-controllers
 ---
@@ -61,5 +65,6 @@ spec:
     name: flux-system
   path: ./infrastructure/config/base/external-secrets
   prune: true
+  wait: true # Ensures ClusterSecretStores are ready before DBs try to pull passwords
   dependsOn:
     - name: infrastructure-controllers
