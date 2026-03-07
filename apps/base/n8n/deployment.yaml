@@ -15,11 +15,16 @@ spec:
       labels:
         app: n8n
     spec:
-      # nodeSelector:
-      #   role: worker
       containers:
         - name: n8n
           image: n8nio/n8n:1.113.3
+          resources:
+            requests:
+              memory: "384Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"   
+              cpu: "1000m"    
           env:
             - name: DB_TYPE
               value: postgresdb
@@ -29,6 +34,10 @@ spec:
               value: "5678"
             - name: N8N_SECURE_COOKIE
               value: "false"
+            # This tells Node.js to Garbage Collect at 768MB so it doesn't 
+            # hit the 1GB K8s limit and get killed.
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=768"
           envFrom:
             - secretRef:
                 name: n8n-secret
