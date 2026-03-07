@@ -17,16 +17,17 @@ spec:
       labels:
         app: unifi
     spec:
+      priorityClassName: application-high 
       containers:
       - name: unifi
         image: lscr.io/linuxserver/unifi-network-application:10.1.85
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
+            memory: "512Mi"  
+            cpu: "300m"
           limits:
-            memory: "512Mi"
-            cpu: "500m"
+            memory: "1Gi"    
+            cpu: "1000m"     # 1 full core for spikes/reboots
         ports:
         - name: web-ui
           containerPort: 8443
@@ -40,7 +41,6 @@ spec:
         - name: discovery
           containerPort: 10001
           protocol: UDP
-        # These are additional ports needed for specific device features
         - name: speedtest
           containerPort: 6789
           protocol: TCP
@@ -53,7 +53,7 @@ spec:
         - name: PGID
           value: "1000"
         - name: TZ
-          value: "Etc/UTC" # IMPORTANT: Change this to your timezone, e.g., "America/New_York"
+          value: "Europe/London" 
         - name: MONGO_HOST
           value: "mongo.unifi-db.svc.cluster.local"
         - name: MONGO_PORT
