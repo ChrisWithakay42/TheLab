@@ -14,29 +14,29 @@ spec:
   prune: true
   wait: true # WARN: Flux will wait for Cilium to be 'Ready' before moving on.
              # This solves the "No CNI" deadlock for subsequent pods.
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: infrastructure-config
+#   namespace: flux-system
+# spec:
+#   interval: 1h
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infrastructure/config/base/cilium
+#   prune: true
+#   wait: true # Ensures BGP/L2 policies are active before apps try to use LoadBalancers
+#   dependsOn:
+#     - name: infrastructure-controllers
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cilium-config
-  namespace: flux-system
-spec:
-  interval: 1h
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infrastructure/config/base/cilium
-  prune: true
-  wait: true # Ensures BGP/L2 policies are active before apps try to use LoadBalancers
-  dependsOn:
-    - name: infrastructure-controllers
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: longhorn-config
+  name: infrastructure-config
   namespace: flux-system
 spec:
   interval: 1h
@@ -54,7 +54,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: external-secrets-config
+  name: infrastructure-config
   namespace: flux-system
 spec:
   interval: 1h
