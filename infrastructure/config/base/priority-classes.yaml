@@ -1,0 +1,15 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: infrastructure-critical
+value: 1000000
+globalDefault: false
+description: "Critical infra like Cilium and Longhorn."
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: application-high
+value: 500000
+globalDefault: false
+description: "High priority apps like Databases."
