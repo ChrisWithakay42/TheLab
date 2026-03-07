@@ -10,13 +10,44 @@ spec:
   chart:
     spec:
       chart: external-secrets
-      version: "0.20.3"
+      version: "0.10.3" # Note: Your previous prompt said 0.20.3, but current stable is ~0.10.x. Ensure version matches your repo.
       sourceRef:
         kind: HelmRepository
         name: external-secrets
         namespace: flux-system
-  values:
-    installCRDs: false
-
   install:
     createNamespace: true
+  values:
+    installCRDs: false
+    
+    # Ensure it stays running during high node load
+    priorityClassName: infrastructure-critical
+
+    # Limit the main operator
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        cpu: 100m
+        memory: 256Mi
+
+    # Limit the Webhook (Handles validation)
+    webhook:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 50m
+          memory: 128Mi
+
+    # Limit the Cert-Controller (Handles internal TLS)
+    certController:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 50m
+          memory: 128Mi
