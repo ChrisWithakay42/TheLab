@@ -13,8 +13,8 @@ spec:
       safi: unicast
       advertisements:
         matchLabels:
-          advertise: "unifi"
-
+          bgp-advertisement: "opnsense"
+          # advertise: "opnsense"
 ---
 #  Cluster Config (Matches all nodes via hostname check)
 apiVersion: "cilium.io/v2"
@@ -42,7 +42,7 @@ kind: CiliumBGPAdvertisement
 metadata:
   name: unifi-ad
   labels:
-    advertise: "unifi" # Matches the PeerConfig selector above
+    bgp-advertisement: "opnsense"
 spec:
   advertisements:
     - advertisementType: "Service"
@@ -52,5 +52,4 @@ spec:
       selector:
         matchLabels:
           io.cilium/network: mgmt
-          # Force Cilium to look in the unifi namespace
           io.kubernetes.service.namespace: unifi
