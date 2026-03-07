@@ -1,5 +1,4 @@
 # Loki Helm values for a single-binary deployment
-
 loki:
   deploymentMode: SingleBinary
   resources:
