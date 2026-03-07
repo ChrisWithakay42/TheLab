@@ -5,4 +5,5 @@ resources:
   - external-secret.yaml
   - ingress.yaml
   - snapshot-job.yaml
+  - storageclass.yaml
   # - longhorn-servicemonitor.yaml
