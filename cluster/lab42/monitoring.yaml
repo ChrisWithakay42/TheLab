@@ -12,7 +12,7 @@ spec:
     name: flux-system
   path: ./monitoring/controllers/base
   prune: true
-  wait: true
+  # wait: true
   dependsOn:
     - name: infrastructure-controllers
 ---
