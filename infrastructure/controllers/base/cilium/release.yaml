@@ -69,10 +69,10 @@ spec:
         enabled: true
 
     # --- NODE STABILITY ---
-    tolerations:
-    - key: "node.kubernetes.io/not-ready"
-      operator: "Exists"
-      effect: "NoExecute"
-    - key: "node.kubernetes.io/not-ready"
-      operator: "Exists"
-      effect: "NoSchedule"
+    # tolerations:
+    # - key: "node.kubernetes.io/not-ready"
+    #   operator: "Exists"
+    #   effect: "NoExecute"
+    # - key: "node.kubernetes.io/not-ready"
+    #   operator: "Exists"
+    #   effect: "NoSchedule"
