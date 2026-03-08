@@ -23,6 +23,9 @@ spec:
     priorityClass: infrastructure-critical
     defaultSettings:
       # Stop the boot-up crash by limiting how many volumes rebuild at once
+      defaultReplicaCount: 2
+      guaranteedEngineManagerCPU: 0
+      guaranteedReplicaManagerCPU: 0
       concurrentReplicaRebuildPerNodeLimit: 1 
       guaranteedEngineManagerCPU: 10
       guaranteedReplicaManagerCPU: 10
