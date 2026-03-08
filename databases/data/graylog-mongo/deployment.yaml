@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    kustomize.config.k8s.io/behavior: skip
   name: mongo
   namespace: graylog-db
   labels:
