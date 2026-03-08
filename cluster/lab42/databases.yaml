@@ -13,6 +13,6 @@ spec:
   path: ./databases/data
   prune: true
   # wait: true # NOTE: Apps will not start until DBs are "Running"
-  dependsOn:
-    - name: infrastructure-controllers
-    - name: infrastructure-configs
+  # dependsOn:
+  #   - name: infrastructure-controllers
+  #   - name: infrastructure-configs

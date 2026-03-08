@@ -13,5 +13,5 @@ spec:
   path: ./apps/base
   prune: true
   # wait: true
-  dependsOn:
-    - name: databases # Only start apps once the data layer is ready
+  # dependsOn:
+  #   - name: databases # Only start apps once the data layer is ready
