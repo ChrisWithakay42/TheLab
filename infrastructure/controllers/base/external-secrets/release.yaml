@@ -52,7 +52,7 @@ spec:
           memory: 128Mi
 
     # Cert-Controller
-    certController:
+    cert-controller:
       resources:
         requests:
           cpu: 10m
