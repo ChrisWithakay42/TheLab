@@ -17,10 +17,12 @@ spec:
         name: external-secrets
         namespace: flux-system
   install:
+    crds: Create
     createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    crds: CreateReplace
     remediation:
       retries: 3
       strategy: rollback
