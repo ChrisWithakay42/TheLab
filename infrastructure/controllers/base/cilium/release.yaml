@@ -22,13 +22,23 @@ spec:
     remediation:
       retries: 3
   values:
+    cluster:
+      name: homelab
+      id: 1
+    k8sServiceHost: 192.168.40.10  # Or the actual LAN IP 
+    k8sServicePort: 6443
+
+    operator:
+      replicas: 1
+      removeNodeTaints: true
+      setNodeTaints: false
+
     # --- RPi5 / LAB STABILITY ---
     kubeProxyReplacement: true
     ipam:
       mode: kubernetes
     
     # --- BGP & L2 ANNOUNCEMENTS ---
-    # This is the part that was missing to make your PeerConfig work
     bgpControlPlane:
       enabled: true
     
