@@ -20,25 +20,55 @@ spec:
     remediation:
       retries: 3
   values:
+    # --- RPi5 / LAB STABILITY ---
     kubeProxyReplacement: true
-    l2announcements:
-      enabled: true
-    externalIPs:
-      enabled: true
-    hubble:
-      relay:
-        enabled: true
-      ui:
-        enabled: true
-    loadBalancer:
-      algorithm: maglev
     ipam:
       mode: kubernetes
+    
+    # --- BGP & L2 ANNOUNCEMENTS ---
+    # This is the part that was missing to make your PeerConfig work
+    bgpControlPlane:
+      enabled: true
+    
+    l2announcements:
+      enabled: true
+    
+    externalIPs:
+      enabled: true
+
+    loadBalancer:
+      algorithm: maglev
+
+    # --- INGRESS & HUBBLE ---
     ingressController:
       enabled: true
       service:
         type: LoadBalancer
         loadBalancerMode: shared
+    
+    hubble:
+      relay:
+        enabled: true
+      ui:
+        enabled: true
+      metrics:
+        enabled:
+          - dns
+          - drop
+          - tcp
+          - flow
+          - port-distribution
+          - icmp
+          - http
+
+    # --- MONITORING ---
+    # Helps Prometheus find Cilium
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+    # --- NODE STABILITY ---
     tolerations:
     - key: "node.kubernetes.io/not-ready"
       operator: "Exists"
