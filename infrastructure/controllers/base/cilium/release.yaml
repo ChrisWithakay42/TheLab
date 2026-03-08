@@ -28,63 +28,40 @@ spec:
     k8sServiceHost: 192.168.40.10  # Or the actual LAN IP 
     k8sServicePort: 6443
 
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cilium
+  namespace: kube-system
+spec:
+  releaseName: cilium
+  targetNamespace: kube-system
+  interval: 1h
+  chart:
+    spec:
+      chart: cilium
+      version: "1.18.1"
+      sourceRef:
+        kind: HelmRepository
+        name: cilium
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  # This tells Flux to look for a ConfigMap named 'cilium-config' 
+  # and merge those values over these defaults.
+  valuesFrom:
+    - kind: ConfigMap
+      name: cilium-config
+      optional: false
+  values:
+    # --- Structural Defaults ---
+    identityAllocationMode: crd
+    routingMode: tunnel
+    tunnelProtocol: vxlan
+    ipv4NativeRoutingCIDR: "10.244.0.0/16"
+    
     operator:
       replicas: 1
       removeNodeTaints: true
       setNodeTaints: false
-
-    # --- RPi5 / LAB STABILITY ---
-    kubeProxyReplacement: true
-    ipam:
-      mode: kubernetes
-    
-    # --- BGP & L2 ANNOUNCEMENTS ---
-    bgpControlPlane:
-      enabled: true
-    
-    l2announcements:
-      enabled: true
-    
-    externalIPs:
-      enabled: true
-
-    loadBalancer:
-      algorithm: maglev
-
-    # --- INGRESS & HUBBLE ---
-    ingressController:
-      enabled: true
-      service:
-        type: LoadBalancer
-        loadBalancerMode: shared
-    
-    hubble:
-      relay:
-        enabled: true
-      ui:
-        enabled: true
-      metrics:
-        enabled:
-          - dns
-          - drop
-          - tcp
-          - flow
-          - port-distribution
-          - icmp
-          - http
-
-    # --- MONITORING ---
-    # Helps Prometheus find Cilium
-    # prometheus:
-    #   enabled: true
-    #   serviceMonitor:
-    #     enabled: true
-
-    # --- NODE STABILITY ---
-    # tolerations:
-    # - key: "node.kubernetes.io/not-ready"
-    #   operator: "Exists"
-    #   effect: "NoExecute"
-    # - key: "node.kubernetes.io/not-ready"
-    #   operator: "Exists"
-    #   effect: "NoSchedule"
