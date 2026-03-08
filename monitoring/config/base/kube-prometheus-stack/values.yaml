@@ -1,80 +1,79 @@
-# Disable Grafana as it's managed separately
-grafana:
-  enabled: false
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-prometheus-stack-values
+  namespace: monitoring
+data:
+  values.yaml: |
+    grafana:
+      enabled: false
 
-# Configure Prometheus
-prometheus:
-  prometheusSpec:
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: longhorn
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 10Gi
-    resources:
-      requests:
-        cpu: 250m
-        memory: 512Mi
-      limits:
-        cpu: 500m
-        memory: 1Gi
+    prometheus:
+      ingress:
+        enabled: true
+        ingressClassName: cilium
+        hosts:
+          - "cwk.prometheus"
+        pathType: Prefix
+      prometheusSpec:
+        retention: 7d
+        retentionSize: 8GB
+        scrapeInterval: 30s
+        evaluationInterval: 30s
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: longhorn
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 10Gi
 
-# Configure Alertmanager
-alertmanager:
-  alertmanagerSpec:
-    storage:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: longhorn
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 2Gi
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
+    alertmanager:
+      ingress:
+        enabled: true
+        ingressClassName: cilium
+        hosts:
+          - "cwk.alertmanager"
+        pathType: Prefix
+      alertmanagerSpec:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: longhorn
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 2Gi
 
-kube-state-metrics:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 200m
-      memory: 256Mi
+    kube-state-metrics:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
 
-prometheus-node-exporter:
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
-
-# Enable Ingress for Prometheus and Alertmanager
-prometheus:
-  ingress:
-    enabled: true
-    ingressClassName: cilium
-    hosts:
-      - "cwk.prometheus"
-    paths:
-      - /
-    pathType: Prefix
-
-alertmanager:
-  ingress:
-    enabled: true
-    ingressClassName: cilium
-    hosts:
-      - "cwk.alertmanager"
-    paths:
-      - /
-    pathType: Prefix
+    prometheus-node-exporter:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
