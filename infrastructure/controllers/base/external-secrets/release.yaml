@@ -53,6 +53,7 @@ spec:
 
     # Cert-Controller
     cert-controller:
+      enabled: true
       resources:
         requests:
           cpu: 10m
