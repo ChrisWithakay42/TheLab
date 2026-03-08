@@ -4,4 +4,3 @@ resources:
   - cilium
   - external-secrets
   - longhorn
-  - vault
