@@ -12,7 +12,7 @@ spec:
     name: flux-system
   path: ./infrastructure/controllers/base
   prune: true
-  wait: true 
+  # wait: true 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -29,6 +29,6 @@ spec:
   # This points to the parent folder containing Cilium, Longhorn, and ESO configs
   path: ./infrastructure/config/base 
   prune: true
-  wait: true
+  # wait: true
   dependsOn:
     - name: infrastructure-controllers
