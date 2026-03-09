@@ -43,6 +43,10 @@ data:
                url: https://192.168.30.5
                version: 6
                key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+        - OMV: 
+            href: http://192.168.10.111
+            description: OpenMediaVault NAS
+            icon: openmediavault.svg
         - Netbox: 
             href: http://192.168.30.30
             description: IPAM/DCIM
