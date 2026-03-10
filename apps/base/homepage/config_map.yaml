@@ -40,7 +40,7 @@ data:
               version: 6
               key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
     
-      - Compute & Storage:
+    - Compute & Storage:
         - Proxmox VE:
             href: http://192.168.20.30:8006/
             description: Virtualization Management
@@ -63,7 +63,7 @@ data:
             description: Cluster Storage Management
             icon: longhorn.svg
     
-      - Infrastructure Management:
+    - Infrastructure Management:
         - Netbox: 
             href: http://192.168.30.30
             description: IPAM/DCIM
@@ -81,7 +81,7 @@ data:
             description: Metrics Monitoring
             icon: grafana.svg
     
-      - Apps & Automation:
+    - Apps & Automation:
         - n8n:
             href: http://cwk.n8n/
             description: Workflow Automation
