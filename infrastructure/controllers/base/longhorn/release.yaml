@@ -29,7 +29,5 @@ spec:
       guaranteedReplicaManagerCPU: 10
       replicaSoftAntiAffinity: true
       storageMinimalAvailablePercentage: 15
-      backupTarget: "s3://HomeLab-Kubernetes-DBs@eu-central-003/longhorn/"
+      backupTarget: "s3://longhorn-backups@us-east-1/"
       backupTargetCredentialSecret: "longhorn-backup-target-secret"
-      s3:
-        endpoint: "https://s3.eu-central-003.backblazeb2.com"
