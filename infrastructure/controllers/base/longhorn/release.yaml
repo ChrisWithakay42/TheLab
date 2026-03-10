@@ -29,5 +29,5 @@ spec:
       guaranteedReplicaManagerCPU: 10
       replicaSoftAntiAffinity: true
       storageMinimalAvailablePercentage: 15
-      backupTarget: "s3://longhorn-backups@us-east-1/"
+      backupTarget: "s3://longhorn-backup@us-east-1/"
       backupTargetCredentialSecret: "longhorn-backup-target-secret"
