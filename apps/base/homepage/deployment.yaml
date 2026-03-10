@@ -1,4 +1,3 @@
-# Deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,7 +23,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: homepage
-          image: "ghcr.io/gethomepage/homepage:v1.4.6"
+          image: "ghcr.io/gethomepage/homepage:latest"
           imagePullPolicy: Always
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
@@ -34,38 +33,45 @@ spec:
                 secretKeyRef:
                   name: homepage-secret
                   key: PIHOLE_WEBPASSWORD
+            - name: HOMEPAGE_VAR_PVE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: homepage-secret
+                  key: PVE_USER
+            - name: HOMEPAGE_VAR_PVE_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: homepage-secret
+                  key: PVE_PASS
+            - name: HOMEPAGE_VAR_OPNSENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: homepage-secret
+                  key: OPNSENSE_KEY
+            - name: HOMEPAGE_VAR_OPNSENSE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: homepage-secret
+                  key: OPNSENSE_SECRET
+            - name: HOMEPAGE_VAR_OMV_USER
+              valueFrom:
+                secretKeyRef:
+                  name: homepage-secret
+                  key: OMV_USER
+            - name: HOMEPAGE_VAR_OMV_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: homepage-secret
+                  key: OMV_PASS
           ports:
             - name: http
               containerPort: 3000
               protocol: TCP
           volumeMounts:
-            - mountPath: /app/config/custom.js
+            - mountPath: /app/config
               name: homepage-config
-              subPath: custom.js
-            - mountPath: /app/config/custom.css
-              name: homepage-config
-              subPath: custom.css
-            - mountPath: /app/config/bookmarks.yaml
-              name: homepage-config
-              subPath: bookmarks.yaml
-            - mountPath: /app/config/docker.yaml
-              name: homepage-config
-              subPath: docker.yaml
-            - mountPath: /app/config/kubernetes.yaml
-              name: homepage-config
-              subPath: kubernetes.yaml
-            - mountPath: /app/config/services.yaml
-              name: homepage-config
-              subPath: services.yaml
-            - mountPath: /app/config/settings.yaml
-              name: homepage-config
-              subPath: settings.yaml
-            - mountPath: /app/config/widgets.yaml
-              name: homepage-config
-              subPath: widgets.yaml
             - mountPath: /app/config/logs
               name: logs
-
       volumes:
         - name: homepage-config
           configMap:

@@ -5,106 +5,176 @@ metadata:
   labels:
     app.kubernetes.io/name: homepage
 data:
+  proxmox.yaml: |
+    url: https://192.168.20.30:8006
+    username: "{{HOMEPAGE_VAR_PVE_USER}}"
+    password: "{{HOMEPAGE_VAR_PVE_PASS}}"
+    verifySsl: false
+  
   kubernetes.yaml: |
     mode: cluster
+  
+  docker.yaml: ""
+
   settings.yaml: |
     serviceDiscovery:
       ingress: false
     providers:
       longhorn:
         url: https://cwk.longhorn
-  custom.css: ""
+    maxGroupColumns: 3
+    background:
+      image: http://192.168.20.20:9000/homepage-wallpapers/hacker-hacking-3840x2160-15637.jpeg
+      brightness: 40
+      blur: 2
+    layout:
+      Network & Core:
+        style: row
+        columns: 3
+      Compute & Storage:
+        style: row
+        columns: 3
+      Observability & Apps:
+        style: row
+        columns: 3
+  
+  custom.css: |
+    .service-card {
+        background-color: rgba(20, 20, 20, 0.4) !important;
+        backdrop-filter: blur(10px) saturate(160%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .group-title {
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-weight: 700;
+    }
+
   custom.js: ""
+
   bookmarks.yaml: |
     - Developer:
         - Github:
             - abbr: GH
               href: https://github.com/
+        - GitLab:
+            - abbr: GL
+              href: https://gitlab.com/
+    - Documentation:
+        - Gethomepage:
+            - abbr: ghp
+              href: https://gethomepage.dev/
+    - Certifications:
+        - Whizlabs:
+            - abbr: Whiz
+              href: https://www.whizlabs.com/labs/
+        - Boson ExSim:
+            - abbr: Boson
+              href: https://exams.boson.com/
+
+
   services.yaml: |
     - Network & Core:
         - OPNSense:
             href: https://192.168.10.1
             description: Router/Firewall
             icon: opnsense.svg
+            widget:
+              type: opnsense
+              url: https://192.168.10.1
+              username: "{{HOMEPAGE_VAR_OPNSENSE_KEY}}"
+              password: "{{HOMEPAGE_VAR_OPNSENSE_SECRET}}"
+              verifySsl: false
         - Unifi:
             href: https://192.168.30.10:8443/
             description: Unifi Controller
             icon: unifi.svg
+            widget:
+              type: unifi
+              url: https://192.168.30.10:8443
+              site: HomeLab
+              username: admin
+              password: semmikulonos
         - Pi-hole:
+            description: Local DNS
             href: http://192.168.30.5/admin/
-            description: Ad-blocking DNS
             icon: pi-hole.svg
             widget:
               type: pihole
-              url: https://192.168.30.5
+              url: http://192.168.30.5
               version: 6
               key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
 
     - Compute & Storage:
         - Proxmox VE:
+            description: Proxmox Cluster
             href: http://192.168.20.30:8006/
-            description: Virtualization Management
-            icon: proxmox.png
-        - OMV:
-            href: http://192.168.10.111
-            description: OpenMediaVault NAS
-            icon: openmediavault.svg
-        - MinIO:
-            href: http://192.168.x.x:9001
-            description: S3 Object Storage
-            icon: minio.svg
+            icon: proxmox.svg
             widget:
-              type: minio
-              url: http://192.168.x.x:9000
-              key: "{{HOMEPAGE_VAR_MINIO_ACCESS_KEY}}"
-              secret: "{{HOMEPAGE_VAR_MINIO_SECRET_KEY}}"
+              type: proxmox
+              url: https://192.168.20.30:8006
+              username: "{{HOMEPAGE_VAR_PVE_USER}}"
+              password: "{{HOMEPAGE_VAR_PVE_PASS}}"
+              verifySsl: false
+        - OMV:
+            description: Open Media Vault NAS
+            href: http://192.168.20.20
+            icon: openmediavault.svg
+            widget:
+              type: openmediavault
+              url: http://192.168.20.20
+              username: "{{HOMEPAGE_VAR_OMV_USER}}"
+              password: "{{HOMEPAGE_VAR_OMV_PASS}}"
+              method: services.getStatus
+        - MinIO:
+            description: S3 Storage buckets
+            href: http://192.168.20.20:9001
+            icon: minio.svg
         - Longhorn:
+            description: K8s iSCSI Storage Provisioner
             href: http://cwk.longhorn/
-            description: Cluster Storage Management
             icon: longhorn.svg
 
-    - Infrastructure Management:
+    - Observability:
         - Netbox:
+            description: DCIM/IPAM
             href: http://192.168.30.30
-            description: IPAM/DCIM
-            icon: netbox.png
-        - pgAdmin:
-            href: http://cwk.pgadmin/
-            description: Database GUI
-            icon: pgadmin.svg
+            icon: netbox.svg
+        - Grafana:
+            description: Metrics Dashboards
+            href: http://cwk.grafana/
+            icon: grafana.svg
         - Graylog:
             href: http://cwk.graylog/
-            description: Log Management
             icon: graylog.svg
-        - Grafana:
-            href: http://cwk.grafana/
-            description: Metrics Monitoring
-            icon: grafana.svg
+        - pgAdmin:
+            href: http://cwk.pgadmin/
+            icon: pgadmin.svg
 
     - Apps & Automation:
         - n8n:
+            description: No code automation framework
             href: http://cwk.n8n/
-            description: Workflow Automation
             icon: n8n.svg
         - Wallabag:
             href: http://cwk.wallabag
-            description: Read later application
             icon: wallabag.svg
+
   widgets.yaml: |
+    - search:
+        provider: duckduckgo
+        target: _blank
+    - datetime:
+        format:
+          timeStyle: short
+          dateStyle: short
     - kubernetes:
         cluster:
           show: true
           cpu: true
           memory: true
           showLabel: true
-          label: "cluster"
+          label: "Cluster"
         nodes:
           show: true
-          cpu: true
-          memory: true
-          showLabel: true
-        expanded: true
-    - search:
-        provider: duckduckgo
-        target: _blank
-  docker.yaml: ""
+  
