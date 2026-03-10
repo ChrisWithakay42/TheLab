@@ -21,15 +21,11 @@ data:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - Infrastructure & Core:
+    - Network & Core:
         - OPNSense:
             href: https://192.168.10.1
             description: Router/Firewall
             icon: opnsense.svg
-        - Proxmox VE:
-            href: http://192.168.20.30:8006/
-            description: Virtualization Management
-            icon: proxmox.png
         - Unifi:
             href: https://192.168.30.10:8443/
             description: Unifi Controller
@@ -39,28 +35,43 @@ data:
             description: Ad-blocking DNS
             icon: pi-hole.svg
             widget:
-               type: pihole
-               url: https://192.168.30.5
-               version: 6
-               key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+              type: pihole
+              url: https://192.168.30.5
+              version: 6
+              key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+    
+      - Compute & Storage:
+        - Proxmox VE:
+            href: http://192.168.20.30:8006/
+            description: Virtualization Management
+            icon: proxmox.png
         - OMV: 
             href: http://192.168.10.111
             description: OpenMediaVault NAS
             icon: openmediavault.svg
-        - Netbox: 
-            href: http://192.168.30.30
-            description: IPAM/DCIM
-            icon: netbox.png
-
-    - Observability:
-        - pgAdmin:
-            href: http://cwk.pgadmin/
-            description: Database GUI
-            icon: pgadmin.svg
+        - MinIO:
+            href: http://192.168.x.x:9001  # Replace with your MinIO Console IP
+            description: S3 Object Storage
+            icon: minio.svg
+            widget:
+              type: minio
+              url: http://192.168.x.x:9000 # MinIO API Port
+              key: "{{HOMEPAGE_VAR_MINIO_ACCESS_KEY}}"
+              secret: "{{HOMEPAGE_VAR_MINIO_SECRET_KEY}}"
         - Longhorn:
             href: http://cwk.longhorn/
             description: Cluster Storage Management
             icon: longhorn.svg
+    
+      - Infrastructure Management:
+        - Netbox: 
+            href: http://192.168.30.30
+            description: IPAM/DCIM
+            icon: netbox.png
+        - pgAdmin:
+            href: http://cwk.pgadmin/
+            description: Database GUI
+            icon: pgadmin.svg
         - Graylog:
             href: http://cwk.graylog/
             description: Log Management
@@ -69,18 +80,16 @@ data:
             href: http://cwk.grafana/
             description: Metrics Monitoring
             icon: grafana.svg
-
-    - Apps/Services:
-        - Reading:
-            - Wallabag:
-                href: http://cwk.wallabag
-                description: Read later application
-                icon: wallabag.svg
-        - Automation Tools:
-            - n8n:
-                href: http://cwk.n8n/
-                description: Workflow Automation
-                icon: n8n.svg
+    
+      - Apps & Automation:
+        - n8n:
+            href: http://cwk.n8n/
+            description: Workflow Automation
+            icon: n8n.svg
+        - Wallabag:
+            href: http://cwk.wallabag
+            description: Read later application
+            icon: wallabag.svg
         # - AI:
         #     - OpenWebUI:
         #         href: http://cwk.openwebui/
