@@ -67,7 +67,7 @@ data:
     - Certifications:
         - Whizlabs:
             - abbr: Whiz
-              href: https://www.whizlabs.com/labs/
+              href: https://www.whizlabs.com/learn/my-courses
         - Boson ExSim:
             - abbr: Boson
               href: https://exams.boson.com/
@@ -177,4 +177,12 @@ data:
           label: "Cluster"
         nodes:
           show: true
-  
+    # - longhorn:
+    #   # Show the expanded view
+    #   expanded: true
+    #   # Shows a node representing the aggregate values
+    #   total: true
+    #   # Shows the node names as labels
+    #   labels: true
+    #   # Show the nodes
+    #   nodes: true
