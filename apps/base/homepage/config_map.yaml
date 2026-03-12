@@ -138,7 +138,7 @@ data:
     - Observability:
         - Netbox:
             description: DCIM/IPAM
-            href: http://192.168.30.30
+            href: http://192.168.10.50:8000
             icon: netbox.svg
         - Grafana:
             description: Metrics Dashboards
