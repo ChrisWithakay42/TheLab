@@ -93,8 +93,8 @@ data:
               type: unifi
               url: https://192.168.30.10:8443
               site: HomeLab
-              username: admin
-              password: semmikulonos
+              username: "{{HOMEPAGE_VAR_UNIFI_USER}}"
+              password: "{{HOMEPAGE_VAR_UNIFI_PASS}}"
         - Pi-hole:
             description: Local DNS
             href: http://192.168.30.5/admin/
