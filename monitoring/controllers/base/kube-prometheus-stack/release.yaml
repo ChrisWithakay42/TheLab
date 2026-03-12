@@ -26,5 +26,4 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: kube-prometheus-stack-values
-      namespace: monitoring
       valuesKey: values.yaml
