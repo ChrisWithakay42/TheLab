@@ -19,3 +19,6 @@ promtail:
 
 grafana-agent:
   enabled: false
+
+grafana:
+  enabled: false
