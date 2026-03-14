@@ -1,4 +1,3 @@
-# Loki Helm values for a single-binary deployment
 loki:
   deploymentMode: SingleBinary
   resources:
@@ -8,11 +7,15 @@ loki:
     limits:
       cpu: 1
       memory: 1Gi
+  persistence:
+    enabled: true
+    storageClassName: "longhorn"
+    size: 10Gi
+  ingress:
+    enabled: false
 
-persistence:
-  enabled: true
-  storageClassName: "longhorn"
-  size: 10Gi
+promtail:
+  enabled: false
 
-ingress:
+grafana-agent:
   enabled: false
