@@ -2,11 +2,7 @@ grafana:
   enabled: true
   adminPassword: "changeme"
   ingress:
-    enabled: true
-    ingressClassName: cilium
-    hosts:
-      - "cwk.grafana"
-    pathType: Prefix
+    enabled: false
   additionalDataSources:
   - name: Loki
     type: loki
@@ -15,11 +11,7 @@ grafana:
 
 prometheus:
   ingress:
-    enabled: true
-    ingressClassName: cilium
-    hosts:
-      - "cwk.prometheus"
-    pathType: Prefix
+    enabled: false
   prometheusSpec:
     retention: 7d
     retentionSize: 8GB
@@ -43,11 +35,7 @@ prometheus:
 
 alertmanager:
   ingress:
-    enabled: true
-    ingressClassName: cilium
-    hosts:
-      - "cwk.alertmanager"
-    pathType: Prefix
+    enabled: false
   alertmanagerSpec:
     resources:
       requests:
