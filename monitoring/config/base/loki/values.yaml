@@ -22,3 +22,6 @@ grafana-agent:
 
 grafana:
   enabled: false
+  sidecar:
+    datasources:
+      enabled: false
