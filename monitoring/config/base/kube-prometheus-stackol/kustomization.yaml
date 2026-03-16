@@ -4,7 +4,6 @@ namespace: monitoring
 resources:
   - ingress-prometheus.yaml
   - ingress-alertmanager.yaml
-  - ingress-grafana.yaml
 configMapGenerator:
 - name: kube-prometheus-stack-values
   files:
