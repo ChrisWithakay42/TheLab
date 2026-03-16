@@ -29,11 +29,20 @@ spec:
             - name: SYMFONY__ENV__DATABASE_PORT
               value: "5432"
             - name: SYMFONY__ENV__DATABASE_NAME
-              value: "wallabag"
+              valueFrom:
+                secretKeyRef:
+                  name: wallabag-secret
+                  key: POSTGRES_DB
             - name: SYMFONY__ENV__DATABASE_USER
-              value: "wallabag"
+              valueFrom:
+                secretKeyRef:
+                  name: wallabag-secret
+                  key: POSTGRES_USER
             - name: SYMFONY__ENV__DATABASE_PASSWORD
-              value: "wallabag-pg-password"
+              valueFrom:
+                secretKeyRef:
+                  name: wallabag-secret
+                  key: POSTGRES_PASSWORD
             - name: SYMFONY__ENV__DOMAIN_NAME
               value: "http://cwk.wallabag"
           volumeMounts:
