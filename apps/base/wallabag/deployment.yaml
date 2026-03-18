@@ -15,6 +15,32 @@ spec:
       labels:
         app: wallabag
     spec:
+      initContainers:
+      - name: wallabag-migrate
+        image: wallabag/wallabag:latest
+        command: ['bin/console', 'doctrine:migrations:migrate', '--no-interaction', '--env=prod', '--allow-no-migrations']
+        env:
+        - name: SYMFONY__ENV__DATABASE_DRIVER
+          value: "pdo_pgsql"
+        - name: SYMFONY__ENV__DATABASE_HOST
+          value: "postgres.wallabag-db.svc.cluster.local"
+        - name: SYMFONY__ENV__DATABASE_PORT
+          value: "5432"
+        - name: SYMFONY__ENV__DATABASE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: wallabag-secret
+              key: POSTGRES_DB
+        - name: SYMFONY__ENV__DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: wallabag-secret
+              key: POSTGRES_USER
+        - name: SYMFONY__ENV__DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wallabag-secret
+              key: POSTGRES_PASSWORD
       containers:
         - name: wallabag
           image: wallabag/wallabag:latest
