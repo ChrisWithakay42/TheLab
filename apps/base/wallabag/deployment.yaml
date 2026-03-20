@@ -18,10 +18,13 @@ spec:
       initContainers:
         - name: wallabag-install
           image: ghcr.io/wallabag/docker:2.6.10
-          command: ['/bin/sh', '-c', 'bin/console wallabag:install --no-interaction || true']
+          command: ['/bin/sh', '-c', 'SYMFONY_ENV=prod bin/console wallabag:install --no-interaction']
           envFrom:
             - secretRef:
                 name: wallabag-secret
+          volumeMounts:
+            - name: data
+              mountPath: /var/www/wallabag/data
       containers:
         - name: wallabag
           image: ghcr.io/wallabag/docker:2.6.10
@@ -33,4 +36,11 @@ spec:
           ports:
             - containerPort: 80
               protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /var/www/wallabag/data
       restartPolicy: Always
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: wallabag-pvc

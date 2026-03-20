@@ -8,7 +8,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: Recreate # Crucial for RWO volumes on Raspberry Pi to prevent "Volume already attached" errors
+    type: Recreate 
   selector:
     matchLabels:
       app: postgres
@@ -17,13 +17,10 @@ spec:
       labels:
         app: postgres
     spec:
-      # Protect the DB from being killed
-      priorityClassName: application-high
       containers:
         - name: postgres
           image: postgres:15
-          # --- WALLABAG OPTIMIZATION ---
-          # Wallabag is less write-heavy than n8n, so we can use a smaller cache.
+          # --- OPTIMIZATION --- #
           args:
             - "-c"
             - "shared_buffers=64MB"
