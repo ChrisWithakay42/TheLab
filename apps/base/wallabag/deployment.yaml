@@ -21,7 +21,7 @@ spec:
           command: ['/bin/sh', '-c', 'bin/console wallabag:install --no-interaction || true']
           envFrom:
             - secretRef:
-                name: wallabag-container-env
+                name: wallabag-secret
       containers:
         - name: wallabag
           image: ghcr.io/wallabag/docker:2.6.10
@@ -29,7 +29,7 @@ spec:
             allowPrivilegeEscalation: false
           envFrom:
             - secretRef:
-                name: wallabag-container-env
+                name: wallabag-secret
           ports:
             - containerPort: 80
               protocol: TCP
