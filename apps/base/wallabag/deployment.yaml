@@ -18,7 +18,7 @@ spec:
       initContainers:
       - name: wallabag-migrate
         image: wallabag/wallabag:latest
-        command: ['/bin/sh', '-c', 'bin/console wallabag:install --env=prod --no-interaction || true']
+        command: ['bin/console', 'wallabag:install', '--env=prod', '--no-interaction']
         env:
         - name: SYMFONY__ENV__DATABASE_DRIVER
           value: "pdo_pgsql"
