@@ -20,8 +20,6 @@ spec:
           image: ghcr.io/wallabag/docker:2.6.10
           command: ['/bin/sh', '-c', 'bin/console wallabag:install --no-interaction || true']
           envFrom:
-            - configMapRef:
-                name: wallabag-configmap
             - secretRef:
                 name: wallabag-container-env
       containers:
@@ -30,8 +28,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
           envFrom:
-            - configMapRef:
-                name: wallabag-configmap
             - secretRef:
                 name: wallabag-container-env
           ports:
