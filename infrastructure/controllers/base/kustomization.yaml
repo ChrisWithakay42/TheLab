@@ -6,4 +6,4 @@ resources:
   - external-secrets
   - longhorn
   - external-dns
-  - cloudflare
+  - cloudflared
