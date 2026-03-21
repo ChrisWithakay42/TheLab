@@ -10,3 +10,12 @@ unseal-key.txt
 README_vault_migration.md
 admin/**
 deploy/crds
+
+# Ignore all YAML files in Lab42 config (the "Unencrypted" risk)
+infrastructure/config/lab42/**/*.yaml
+infrastructure/controllers/lab42/**/*.yaml
+# But allow the encrypted ones
+!infrastructure/config/lab42/**/*.sops.yaml
+!infrastructure/controllers/lab42/**/*.sops.yaml
+# Always ignore the master age.key
+admin/age.key

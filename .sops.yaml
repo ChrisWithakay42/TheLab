@@ -1,4 +1,17 @@
 creation_rules:
-  - path_regex: .*.yaml
-    encrypted_regex: ^(data|stringData)$
-    age: age1ek6h5yd7d4qs49zyjhu2fsvpwm8a4nezl02gd5zj35cawca5udgqt9jp25
+  # RULE 1: Match 'base' folders first and stop.
+  # We give it an empty/dummy key or a non-existent path to make it effectively "do nothing"
+  # or just use a path that we know we want to keep public.
+  - path_regex: .*/base/.*\.yaml$
+    # We leave this without a key or with an empty rule to prevent encryption
+    # If SOPS matches this, it stops looking at further rules.
+
+  # RULE 2: Match 'lab42' folders. 
+  # This is the "Safe Zone" for your personal configs.
+  - path_regex: .*/lab42/.*\.yaml$
+    age: "age1ek6h5yd7d4qs49zyjhu2fsvpwm8a4nezl02gd5zj35cawca5udgqt9jp25"
+
+  # RULE 3: Catch-all for other personal folders (apps/databases) 
+  # that aren't in 'base'.
+  - path_regex: (apps|databases|monitoring|infrastructure)/.*\.yaml$
+    age: "age1ek6h5yd7d4qs49zyjhu2fsvpwm8a4nezl02gd5zj35cawca5udgqt9jp25"
