@@ -54,12 +54,12 @@ data:
 
   bookmarks.yaml: |
     - Developer:
-        - Github:
-            - abbr: GH
-              href: https://github.com/
         - GitLab:
             - abbr: GL
               href: https://gitlab.com/
+        - Github:
+            - abbr: GH
+              href: https://github.com/
     - Documentation:
         - Gethomepage:
             - abbr: ghp
