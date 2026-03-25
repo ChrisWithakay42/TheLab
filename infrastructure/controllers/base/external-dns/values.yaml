@@ -1,10 +1,21 @@
 provider: cloudflare
 
-policy: sync
+# This tells ExternalDNS to create CNAMEs pointing to tunnel 
+# instead of looking for a LoadBalancer IP
+connectorSource: true 
 
+# Critical for Cloudflare Tunnels
+extraArgs:
+  - --cloudflare-proxied # Enabled "Orange Cloud" by default
+  - --dns-provider-cloudflare-proxied=true
+  - --source=ingress
+  - --source=service
+
+# Map your secret to the standard way the chart expects it
 env:
   - name: CF_API_TOKEN
     valueFrom:
       secretKeyRef:
         name: cloudflare-dns-api-token
         key: cloudflare-dns-api-token
+
