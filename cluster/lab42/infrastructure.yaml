@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/controllers/base
+  path: ./infrastructure/controllers/lab42
   prune: true
   wait: true 
 ---
@@ -27,7 +27,7 @@ spec:
     kind: GitRepository
     name: flux-system
   # This points to the parent folder containing Cilium, Longhorn, and ESO configs
-  path: ./infrastructure/config/base 
+  path: ./infrastructure/config/lab42
   prune: true
   wait: true
   dependsOn:

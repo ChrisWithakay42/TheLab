@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./databases/data
+  path: ./databases/lab42
   prune: true
   wait: true # NOTE: Apps will not start until DBs are "Running"
   dependsOn:

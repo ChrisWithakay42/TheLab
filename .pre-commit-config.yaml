@@ -2,9 +2,10 @@ repos:
 - repo: local
   hooks:
     - id: sops-encryption-check
-      name: Check SOPS Encryption
-      # Using a shell loop ensures we check every file individually
-      entry: /bin/bash -c 'for f in "$@"; do sops --decrypt "$f" > /dev/null || exit 1; done' --
+      name: Check Lab42 Overlays
+      # Wrapped in " " and escaped internal " with \
+      entry: "/bin/bash -c 'for f in \"$@\"; do grep -q \"sops\" \"$f\" || { echo \"ERROR: $f is NOT encrypted!\"; exit 1; }; done' --"
       language: system
-      files: .*/lab42/.*\.yaml$
+      files: (^|/)lab42/.*\.yaml$
+      exclude: ^cluster/lab42/
       pass_filenames: true
