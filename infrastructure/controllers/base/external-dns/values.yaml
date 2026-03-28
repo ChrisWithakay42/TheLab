@@ -9,6 +9,7 @@ extraArgs:
   - --cloudflare-proxied # Enabled "Orange Cloud" by default
   - --source=ingress
   - --source=service
+  - --domain-filter=codewithakay.dev
 
 # Map your secret to the standard way the chart expects it
 env:
