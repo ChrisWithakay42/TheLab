@@ -1,17 +1,14 @@
 creation_rules:
-  # RULE 1: Neutralize 'base' and 'cluster/lab42' folders.
-  # If a file matches these paths, SOPS will find no encryption keys 
-  # and will essentially ignore them for encryption purposes.
+  # RULE 1: Keep 'base' and 'cluster/lab42' plaintext
   - path_regex: (.*/base/.*|cluster/lab42/.*)\.yaml$
-    # We provide no age/kms keys here so they stay plaintext.
 
-  # RULE 2: Match all other 'lab42' folders.
-  # This covers apps/lab42, databases/lab42, etc.
+  # NEW RULE: Keep 'kustomization.yaml' in 'lab42' overlays plaintext
+  - path_regex: .*/lab42/kustomization\.yaml$
+
+  # RULE 3: Encrypt all other .yaml files in 'lab42' overlays
   - path_regex: .*/lab42/.*\.yaml$
     age: "age1ek6h5yd7d4qs49zyjhu2fsvpwm8a4nezl02gd5zj35cawca5udgqt9jp25"
 
-  # RULE 3: Catch-all for other specific directories.
-  # This ensures any YAML in these roots (not already caught by the 'base' rule)
-  # gets encrypted with your key.
+  # RULE 4: Catch-all to encrypt other manifests
   - path_regex: ^(apps|databases|monitoring|infrastructure)/.*\.yaml$
     age: "age1ek6h5yd7d4qs49zyjhu2fsvpwm8a4nezl02gd5zj35cawca5udgqt9jp25"
