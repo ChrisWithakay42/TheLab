@@ -6,7 +6,8 @@ repos:
       entry: |
         /bin/bash -c 'for f in "$@"; do grep -q "sops" "$f" || { echo "ERROR: $f is NOT encrypted!"; exit 1; }; done' --
       language: system
-      files: (^|/)lab42/.*\.yaml$
-      # Exclude kustomization.yaml files and the cluster/lab42 directory
-      exclude: (.*/lab42/kustomization\.yaml$|^cluster/lab42/)
+      # This regex now selects all .yaml files in lab42 directories,
+      # EXCEPT for files named kustomization.yaml
+      files: .*/lab42/(?!kustomization\.yaml$).*\.yaml$
+      exclude: ^cluster/lab42/
       pass_filenames: true
