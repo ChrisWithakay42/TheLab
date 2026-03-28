@@ -1,0 +1,10 @@
+repos:
+- repo: local
+  hooks:
+    - id: sops-encryption-check
+      name: Check SOPS Encryption
+      # Using a shell loop ensures we check every file individually
+      entry: /bin/bash -c 'for f in "$@"; do sops --decrypt "$f" > /dev/null || exit 1; done' --
+      language: system
+      files: .*/lab42/.*\.yaml$
+      pass_filenames: true

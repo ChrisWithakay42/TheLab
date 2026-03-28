@@ -7,7 +7,6 @@ connectorSource: true
 # Critical for Cloudflare Tunnels
 extraArgs:
   - --cloudflare-proxied # Enabled "Orange Cloud" by default
-  - --dns-provider-cloudflare-proxied=true
   - --source=ingress
   - --source=service
 
