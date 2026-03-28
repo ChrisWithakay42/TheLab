@@ -3,9 +3,10 @@ repos:
   hooks:
     - id: sops-encryption-check
       name: Check Lab42 Overlays
-      # Wrapped in " " and escaped internal " with \
-      entry: "/bin/bash -c 'for f in \"$@\"; do grep -q \"sops\" \"$f\" || { echo \"ERROR: $f is NOT encrypted!\"; exit 1; }; done' --"
+      entry: |
+        /bin/bash -c 'for f in "$@"; do grep -q "sops" "$f" || { echo "ERROR: $f is NOT encrypted!"; exit 1; }; done' --
       language: system
       files: (^|/)lab42/.*\.yaml$
-      exclude: ^cluster/lab42/
+      # Exclude kustomization.yaml files and the cluster/lab42 directory
+      exclude: (.*/lab42/kustomization\.yaml$|^cluster/lab42/)
       pass_filenames: true
