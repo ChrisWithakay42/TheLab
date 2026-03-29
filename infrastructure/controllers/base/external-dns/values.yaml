@@ -10,6 +10,7 @@ extraArgs:
   - --source=ingress
   - --source=service
   - --domain-filter=codewithakay.dev
+  - --ingress-class=cloudflare-tunnel
 
 # Map your secret to the standard way the chart expects it
 env:
