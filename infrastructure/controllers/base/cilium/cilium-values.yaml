@@ -10,9 +10,15 @@ data:
     k8sServicePort: 6443
     kubeProxyReplacement: true
 
+    # --- IP Address Management ---
+    ipam:
+      mode: kubernetes
+
     # --- BGP & L2 ---
     bgpControlPlane:
       enabled: true
+    operator:
+      enableBGPControlPlane: true
     l2announcements:
       enabled: true
     externalIPs:
@@ -23,6 +29,7 @@ data:
     # --- Ingress & Hubble ---
     ingressController:
       enabled: true
+      default: true
       loadBalancerMode: shared
     hubble:
       relay:
