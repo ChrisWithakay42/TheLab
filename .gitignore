@@ -20,5 +20,6 @@ deploy/crds
 # And DO commit encrypted .sops.yaml files
 !**/*.sops.yaml
 
+!cluster/**
 # Always ignore the master age.key
 admin/age.key
