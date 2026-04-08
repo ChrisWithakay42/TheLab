@@ -6,3 +6,4 @@ resources:
   - infrastructure.yaml
   - monitoring.yaml
   - priority-classes.yaml
+  - sops-age-secret.yaml
