@@ -1,4 +1,5 @@
 provider: cloudflare
+interval: 10m
 
 # This tells ExternalDNS to create CNAMEs pointing to tunnel 
 # instead of looking for a LoadBalancer IP
