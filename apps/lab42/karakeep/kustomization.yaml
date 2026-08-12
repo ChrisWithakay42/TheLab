@@ -4,8 +4,8 @@ bases:
   - ../../base/karakeep
 resources:
   - service_account.yaml
-patches:
-  - path: add_service_account_patch.yaml
-    target:
-      kind: Deployment
-      name: karakeep
+# patches:
+#   - path: add_service_account_patch.yaml
+#     target:
+#       kind: Deployment
+#       name: karakeep
