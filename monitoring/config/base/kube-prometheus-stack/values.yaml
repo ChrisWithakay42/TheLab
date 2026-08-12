@@ -1,6 +1,6 @@
 grafana:
   enabled: true
-  adminPassword: "changeme"
+  adminPassword: "changeme" 
   ingress:
     enabled: false
   additionalDataSources:
@@ -14,16 +14,23 @@ prometheus:
     enabled: false
   prometheusSpec:
     retention: 7d
-    retentionSize: 8GB
+    retentionSize: 6GB
     scrapeInterval: 30s
     evaluationInterval: 30s
+    walCompression: true
     resources:
       requests:
         cpu: 250m
-        memory: 512Mi
+        memory: 768Mi
       limits:
-        cpu: 500m
-        memory: 1Gi
+        cpu: 1000m
+        memory: 2Gi
+    
+    # Prevents Kubernetes from killing Prometheus during WAL recovery on boot
+    startupProbe:
+      failureThreshold: 60
+      periodSeconds: 10
+
     storageSpec:
       volumeClaimTemplate:
         spec:
