@@ -1,4 +1,24 @@
-# Graylog Helm values translated from existing manifests
+# Disable packaged subcharts in the KongZ chart
+tags:
+  install-mongodb: false
+  install-opensearch: false
+
+mongodb:
+  community:
+    install: false
+
+graylog:
+  # Configure OpenSearch connection
+  opensearch:
+    hosts: "http://opensearch.opensearch.svc.cluster.local:9200"
+
+  # Pass the MongoDB URI safely from secret via environment variable
+  extraEnv:
+    - name: GRAYLOG_MONGODB_URI
+      valueFrom:
+        secretKeyRef:
+          name: graylog-secret
+          key: GRAYLOG_MONGODB_URI
 
 replicaCount: 1
 updateStrategy:
@@ -8,27 +28,13 @@ image:
   repository: graylog/graylog
   tag: "5.2"
 
-# Disable the packaged MongoDB and Elasticsearch from the Bitnami chart
-mongodb:
-  enabled: false
-elasticsearch:
-  enabled: false
-
-# Configure connection to external databases
-externalMongodb:
-  uri: "mongodb://admin:password@mongo.graylog-db.svc.cluster.local:27017/graylog?authSource=admin"
-externalElasticsearch:
-  hosts:
-    - opensearch.opensearch.svc.cluster.local
-  port: 9200
-
-# Root user password and secret
+# Root user password and secret references
 auth:
   existingSecret: "graylog-secret"
   rootPasswordKey: "GRAYLOG_ROOT_PASSWORD_SHA2"
   passwordSecretKey: "GRAYLOG_PASSWORD_SECRET"
 
-# Journal is disabled in the old deployment
+# Journal configuration
 journal:
   enabled: false
 
