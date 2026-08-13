@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: karakeep
-          image: ghcr.io/melo/karakeep:latest
+          image: ghcr.io/melo/karakeep:release
           ports:
             - containerPort: 8080
               name: http
