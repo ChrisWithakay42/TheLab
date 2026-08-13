@@ -20,10 +20,13 @@ spec:
       securityContext:
         fsGroup: 65534 # Assigns 'nobody' group permissions to the PVC volume
       initContainers:
-        # Permission fixer container (runs as root to fix SQLite write permissions)
+        # Permission & Directory fixer container (creates required subdirectories and sets ownership)
         - name: fix-permissions
           image: busybox:latest
-          command: ["sh", "-c", "chown -R 65534:65534 /var/www/wallabag/data && chmod -R 775 /var/www/wallabag/data"]
+          command:
+            - "sh"
+            - "-c"
+            - "mkdir -p /var/www/wallabag/data/db /var/www/wallabag/data/assets /var/www/wallabag/data/images && chown -R 65534:65534 /var/www/wallabag/data && chmod -R 775 /var/www/wallabag/data"
           securityContext:
             runAsUser: 0
           volumeMounts:
