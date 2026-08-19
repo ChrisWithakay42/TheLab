@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: taskchampion-sync-server
+  namespace: taskchampion
+  # annotations:
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: cilium
+  # tls:
+  #   - hosts:
+  #       - cwk.taskchampion
+  #     secretName: taskchampion-tls
+  rules:
+    - host: cwk.taskchampion
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: taskchampion-sync-server
+                port:
+                  name: http
