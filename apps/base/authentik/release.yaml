@@ -58,8 +58,8 @@ spec:
       targetPath: authentik.redis.port
     - kind: Secret
       name: authentik-secret
-      valuesKey: REDIS_USER
-      targetPath: authentik.redis.password
+      valuesKey: REDIS_USERNAME
+      targetPath: env.AUTHENTIK_REDIS__USERNAME 
     - kind: Secret
       name: authentik-secret
       valuesKey: REDIS_PASSWORD
