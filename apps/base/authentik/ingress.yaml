@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: authentik-ingress
+  namespace: authentik
+  # Add annotations here if you use cert-manager (e.g., cert-manager.io/cluster-issuer: "letsencrypt-prod")
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - auth.cwk.lab42
+      secretName: authentik-tls-cert
+  rules:
+    - host: auth.cwk.lab42
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: authentik-server 
+                port:
+                  number: 80
