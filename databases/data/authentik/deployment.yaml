@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgbouncer
+  namespace: authentik
+  labels:
+    app.kubernetes.io/name: pgbouncer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pgbouncer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pgbouncer
+    spec:
+      containers:
+        - name: pgbouncer
+          image: edoburu/pgbouncer:latest
+          ports:
+            - containerPort: 6432
+              name: pgbouncer
+          # Mounts DB_HOST, DB_USER, DB_PASSWORD, DB_NAME directly from ExternalSecret
+          envFrom:
+            - secretRef:
+                name: pgbouncer-secret
+          # Pool behavior overrides for Aiven compatibility
+          env:
+            - name: DB_PORT
+              value: "5432"
+            - name: POOL_MODE
+              value: "transaction"
+            - name: MAX_CLIENT_CONN
+              value: "100"       # Allows Authentik workers up to 100 client connections
+            - name: DEFAULT_POOL_SIZE
+              value: "12"        # Multiplexes requests down to 12 backend connections (Aiven cap: 20)
+            - name: SERVER_TLS_SSLMODE
+              value: "require"   # Forces TLS encryption to Aiven
+          resources:
+            limits:
+              cpu: 250m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
