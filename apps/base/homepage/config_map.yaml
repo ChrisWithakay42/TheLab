@@ -106,7 +106,7 @@ data:
               key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
         - Authentik:
             description: Local IdP
-            href: http://192.168.30.5/admin/
+            href: http://auth.cwk.lab42/
             icon: authentik.svg
 
     - Compute & Storage:
