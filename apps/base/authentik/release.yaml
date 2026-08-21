@@ -20,65 +20,64 @@ spec:
     remediation:
       retries: 3
   releaseName: authentik
-  
-  valuesFrom:
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: AUTHENTIK_SECRET_KEY
-      targetPath: authentik.secret_key
-      
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: POSTGRESQL_HOST
-      targetPath: authentik.postgresql.host
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: POSTGRESQL_PORT
-      targetPath: authentik.postgresql.port
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: POSTGRESQL_NAME
-      targetPath: authentik.postgresql.name
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: POSTGRESQL_USER
-      targetPath: authentik.postgresql.user
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: POSTGRESQL_PASSWORD
-      targetPath: authentik.postgresql.password
-
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: REDIS_HOST
-      targetPath: authentik.redis.host
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: REDIS_PORT
-      targetPath: authentik.redis.port
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: REDIS_USERNAME
-      targetPath: env.AUTHENTIK_REDIS__USERNAME 
-    - kind: Secret
-      name: authentik-secret
-      valuesKey: REDIS_PASSWORD
-      targetPath: authentik.redis.password
 
   values:
-    global:
-      env:
-        - name: AUTHENTIK_REDIS__TLS
-          value: "true"
-        - name: AUTHENTIK_POSTGRESQL__OPTIONS__SSLMODE
-          value: "require"
-
     authentik:
       error_reporting:
         enabled: true
         
-    # Disable BOTH internal subcharts
     postgresql:
       enabled: false 
     redis:
       enabled: false
+
+    # 1. Provide plain-text environment variables here (as a dictionary)
+    env:
+      AUTHENTIK_REDIS__TLS: "true"
+      AUTHENTIK_POSTGRESQL__OPTIONS__SSLMODE: "require"
+
+    envValueFrom:
+      AUTHENTIK_SECRET_KEY:
+        secretKeyRef:
+          name: authentik-secret
+          key: AUTHENTIK_SECRET_KEY
+          
+      # PostgreSQL Secrets
+      AUTHENTIK_POSTGRESQL__HOST:
+        secretKeyRef:
+          name: authentik-secret
+          key: POSTGRESQL_HOST
+      AUTHENTIK_POSTGRESQL__PORT:
+        secretKeyRef:
+          name: authentik-secret
+          key: POSTGRESQL_PORT
+      AUTHENTIK_POSTGRESQL__NAME:
+        secretKeyRef:
+          name: authentik-secret
+          key: POSTGRESQL_NAME
+      AUTHENTIK_POSTGRESQL__USER:
+        secretKeyRef:
+          name: authentik-secret
+          key: POSTGRESQL_USER
+      AUTHENTIK_POSTGRESQL__PASSWORD:
+        secretKeyRef:
+          name: authentik-secret
+          key: POSTGRESQL_PASSWORD
+          
+      # Redis/Valkey Secrets
+      AUTHENTIK_REDIS__HOST:
+        secretKeyRef:
+          name: authentik-secret
+          key: REDIS_HOST
+      AUTHENTIK_REDIS__PORT:
+        secretKeyRef:
+          name: authentik-secret
+          key: REDIS_PORT
+      AUTHENTIK_REDIS__USERNAME:
+        secretKeyRef:
+          name: authentik-secret
+          key: REDIS_USERNAME
+      AUTHENTIK_REDIS__PASSWORD:
+        secretKeyRef:
+          name: authentik-secret
+          key: REDIS_PASSWORD
