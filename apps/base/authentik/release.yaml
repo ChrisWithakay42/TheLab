@@ -1,0 +1,84 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: authentik
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: authentik
+      version: '2024.2.1' 
+      sourceRef:
+        kind: HelmRepository
+        name: authentik
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  releaseName: authentik
+  
+  valuesFrom:
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: AUTHENTIK_SECRET_KEY
+      targetPath: authentik.secret_key
+      
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: POSTGRESQL_HOST
+      targetPath: authentik.postgresql.host
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: POSTGRESQL_PORT
+      targetPath: authentik.postgresql.port
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: POSTGRESQL_NAME
+      targetPath: authentik.postgresql.name
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: POSTGRESQL_USER
+      targetPath: authentik.postgresql.user
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: POSTGRESQL_PASSWORD
+      targetPath: authentik.postgresql.password
+
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: REDIS_HOST
+      targetPath: authentik.redis.host
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: REDIS_PORT
+      targetPath: authentik.redis.port
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: REDIS_USER
+      targetPath: authentik.redis.password
+    - kind: Secret
+      name: authentik-secret
+      valuesKey: REDIS_PASSWORD
+      targetPath: authentik.redis.password
+
+  values:
+    global:
+      env:
+        - name: AUTHENTIK_REDIS__TLS
+          value: "true"
+        - name: AUTHENTIK_POSTGRESQL__OPTIONS__SSLMODE
+          value: "require"
+
+    authentik:
+      error_reporting:
+        enabled: true
+        
+    # Disable BOTH internal subcharts
+    postgresql:
+      enabled: false 
+    redis:
+      enabled: false
