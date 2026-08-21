@@ -6,10 +6,6 @@ metadata:
   # Add annotations here if you use cert-manager (e.g., cert-manager.io/cluster-issuer: "letsencrypt-prod")
 spec:
   ingressClassName: cilium
-  tls:
-    - hosts:
-        - auth.cwk.lab42
-      secretName: authentik-tls-cert
   rules:
     - host: auth.cwk.lab42
       http:
