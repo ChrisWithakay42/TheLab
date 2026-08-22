@@ -78,6 +78,16 @@ spec:
                 secretKeyRef:
                   name: homepage-secret
                   key: AUTHENTIK_API_KEY
+            - name: HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: homepage-secret
+                  key: CLOUDFLARE_ACCOUNT_ID
+            - name: HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: homepage-secret
+                  key: CLOUDFLARE_TUNNEL_ID
             - name: HOMEPAGE_VAR_CLOUDFLARE_TOKEN
               valueFrom:
                 secretKeyRef:
