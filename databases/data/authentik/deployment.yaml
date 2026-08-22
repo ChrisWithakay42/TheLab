@@ -26,6 +26,8 @@ spec:
                 name: pgbouncer-secret
           # Pool behavior overrides for Aiven compatibility
           env:
+            - name: AUTH_TYPE
+              value: "scram-sha-256"
             - name: LISTEN_PORT
               value: "6432"
             - name: POOL_MODE
