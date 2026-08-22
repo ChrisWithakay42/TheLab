@@ -10,10 +10,10 @@ data:
     username: "{{HOMEPAGE_VAR_PVE_USER}}"
     password: "{{HOMEPAGE_VAR_PVE_PASS}}"
     verifySsl: false
-  
+
   kubernetes.yaml: |
     mode: cluster
-  
+
   docker.yaml: ""
 
   settings.yaml: |
@@ -22,97 +22,311 @@ data:
     providers:
       longhorn:
         url: https://cwk.longhorn
-    maxGroupColumns: 3
+    maxGroupColumns: 4
+    useEqualHeights: true
+    cardBlur: md
     background:
-      image: http://192.168.20.20:9000/homepage-wallpapers/hacker-hacking-3840x2160-15637.jpeg
+      image: "http://192.168.20.20:9000/homepage-wallpapers/hacker-hacking-3840x2160-15637.jpeg"
       brightness: 40
       blur: 2
+
     layout:
-      Network & Core:
+      System:
         style: row
-        columns: 3
-      Compute & Storage:
+        columns: 2
+      Network & Security:
         style: row
-        columns: 3
-      Observability & Apps:
+        columns: 2
+      Identity & Access:
         style: row
-        columns: 3
-  
+        columns: 2
+      Storage & Data:
+        style: row
+        columns: 2
+      Gateways:
+        style: row
+        columns: 2
+      Observability & Automation:
+        style: row
+        columns: 2
+      Sidebar:
+        style: column
+        columns: 1
+
   custom.css: |
-    .service-card {
-        background-color: rgba(20, 20, 20, 0.4) !important;
-        backdrop-filter: blur(10px) saturate(160%);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .group-title {
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        font-weight: 700;
+    /* --- Cyberpunk / Glassmorphism Theme --- */
+    :root {
+      --glass-bg: rgba(14, 16, 24, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --accent-glow: rgba(0, 220, 130, 0.4);
     }
 
-  custom.js: ""
+    #layout-groups {
+      gap: 1rem !important;
+      align-items: stretch !important; /* overrides Tailwind's items-start, which was the actual cause */
+    }
+
+    @media (min-width: 1280px) {
+      #layout-groups > .services-group:not(.drawer-group) {
+        flex: 0 1 calc((100% - 2rem) / 3) !important;
+        max-width: calc((100% - 2rem) / 3) !important;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1279px) {
+      #layout-groups > .services-group:not(.drawer-group) {
+        flex: 0 1 calc((100% - 1rem) / 2) !important;
+        max-width: calc((100% - 1rem) / 2) !important;
+      }
+    }
+
+    /* Glass Cards */
+    .service-card, .widget-card {
+      background-color: var(--glass-bg) !important;
+      backdrop-filter: blur(14px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+      border: 1px solid var(--glass-border) !important;
+      border-radius: 10px !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      break-inside: avoid !important; /* stop cards splitting across CSS columns */
+    }
+
+    .service-card:hover, .widget-card:hover {
+      border-color: var(--accent-glow) !important;
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.7), 0 0 10px 0 rgba(0, 220, 130, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Category Group Headers */
+    .group-title {
+      font-size: 0.8rem !important;
+      font-weight: 800 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.12em !important;
+      color: rgba(220, 230, 240, 0.9) !important;
+      margin-bottom: 0.5rem !important;
+    }
+
+    /* Stat Badges / Metrics */
+    .widget-stat {
+      background-color: rgba(0, 0, 0, 0.4) !important;
+      border: 1px solid rgba(255, 255, 255, 0.06) !important;
+      border-radius: 5px !important;
+      font-weight: 600 !important;
+    }
+
+    /* Prevent stat labels like "WAN DOWNLOAD" from breaking mid-word
+       (was rendering as "WA" / "N DOWN" on narrow OPNsense-style cards) */
+    .service-block,
+    .widget-stat {
+      word-break: keep-all !important;
+      overflow-wrap: normal !important;
+      white-space: normal !important;
+      min-width: 0;
+    }
+
+    html, body {
+      overflow-x: hidden;
+    }
+
+    /* Fix density for 14" screen so it doesn't scroll off bottom */
+    @media (max-width: 1600px) {
+      .service-card {
+        padding: 0.6rem 0.75rem !important;
+      }
+      .service-card .service-title {
+        font-size: 0.82rem !important;
+        font-weight: 600;
+      }
+      .service-card .service-description {
+        font-size: 0.68rem !important;
+        opacity: 0.65;
+      }
+      .widget-stat {
+        padding: 0.15rem 0.3rem !important;
+        font-size: 0.68rem !important;
+      }
+    }
+
+    /* --- Off-canvas Sidebar Drawer ---
+       .drawer-group is applied by custom.js to whichever .services-group
+       has the title "Sidebar". #sidebar-backdrop and #sidebar-toggle are
+       also created by custom.js. */
+    .drawer-group {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 320px;
+      max-width: 85vw;
+      margin: 0 !important;
+      padding: 1rem;
+      overflow-y: auto;
+      z-index: 60;
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px) saturate(180%);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      border-left: 1px solid var(--glass-border);
+      transform: translateX(100%) !important;
+      transition: transform 0.3s ease;
+    }
+
+    body.sidebar-open .drawer-group {
+      transform: translateX(0) !important;
+      box-shadow: -8px 0 24px rgba(0, 0, 0, 0.5);
+    }
+
+    #sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: transparent; /* was rgba(0,0,0,0.5) — no more dimming */
+      pointer-events: none;
+      z-index: 55;
+    }
+
+    body.sidebar-open #sidebar-backdrop {
+      pointer-events: auto; /* still catches the click-outside-to-close */
+    }
+
+    #sidebar-toggle {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      z-index: 61;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-right: none;
+      border-radius: 8px 0 0 8px;
+      padding: 0.75rem 0.4rem;
+      cursor: pointer;
+      color: rgba(220, 230, 240, 0.9);
+      writing-mode: vertical-rl;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: right 0.3s ease;
+    }
+
+    body.sidebar-open #sidebar-toggle {
+      right: 320px;
+    }
+
+  custom.js: |
+    (function () {
+      // --- Sidebar drawer ---
+      function findSidebarGroup() {
+        var container = document.getElementById('layout-groups');
+        if (!container) return null;
+        var groups = container.children;
+        for (var i = 0; i < groups.length; i++) {
+          if (groups[i].textContent.trim().indexOf('Sidebar') === 0) {
+            return groups[i];
+          }
+        }
+        return null;
+      }
+
+      function initSidebar() {
+        var sidebar = findSidebarGroup();
+        if (!sidebar) return false;
+
+        // Move it to be a DIRECT child of <body>. If any ancestor between
+        // the original spot and <body> has a CSS transform (common in
+        // Tailwind/Next.js apps, even an idle GPU-acceleration transform),
+        // that ancestor silently becomes this element's containing block
+        // instead of the viewport — position:fixed then behaves like
+        // position:absolute inside a scrollable container, which is why
+        // it stayed reachable by scrolling even while "closed".
+        if (sidebar.parentElement !== document.body) {
+          document.body.appendChild(sidebar);
+        }
+
+        sidebar.classList.add('drawer-group');
+
+        if (!document.getElementById('sidebar-backdrop')) {
+          var backdrop = document.createElement('div');
+          backdrop.id = 'sidebar-backdrop';
+          backdrop.addEventListener('click', function () {
+            document.body.classList.remove('sidebar-open');
+          });
+          document.body.appendChild(backdrop);
+        }
+
+        if (!document.getElementById('sidebar-toggle')) {
+          var toggle = document.createElement('div');
+          toggle.id = 'sidebar-toggle';
+          toggle.textContent = 'Sidebar';
+          toggle.addEventListener('click', function () {
+            document.body.classList.toggle('sidebar-open');
+          });
+          document.body.appendChild(toggle);
+        }
+
+        return true;
+      }
+
+      // --- OPNsense label shortening ---
+      // Widget labels ("WAN UPLOAD"/"WAN DOWNLOAD") are hardcoded text from
+      // Homepage's translation strings, not attributes, so CSS can't
+      // rewrite them — this walks text nodes and swaps them after render.
+      var LABEL_REPLACEMENTS = {
+        'WAN UPLOAD': 'WAN UP',
+        'WAN DOWNLOAD': 'WAN DOWN',
+        'CPU LOAD': 'CPU',
+        'ACTIVE MEMORY': 'MEMORY'
+      };
+
+      function shortenLabels() {
+        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        var node;
+        while ((node = walker.nextNode())) {
+          var text = node.nodeValue.trim();
+          if (Object.prototype.hasOwnProperty.call(LABEL_REPLACEMENTS, text)) {
+            node.nodeValue = LABEL_REPLACEMENTS[text];
+          }
+        }
+      }
+
+      var tries = 0;
+      var iv = setInterval(function () {
+        tries++;
+        var sidebarReady = initSidebar();
+        shortenLabels();
+        if (sidebarReady || tries > 20) clearInterval(iv);
+      }, 250);
+
+      // OPNsense stats refetch periodically and re-render with the full
+      // original label text, so keep re-shortening whenever the DOM
+      // changes rather than relying on the one-time interval above.
+      var observer = new MutationObserver(function () {
+        shortenLabels();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    })();
 
   bookmarks.yaml: |
     - Developer:
         - GitLab:
             - abbr: GL
               href: https://gitlab.com/
-        - Github:
+        - GitHub:
             - abbr: GH
               href: https://github.com/
     - Documentation:
-        - Gethomepage:
-            - abbr: ghp
+        - Homepage:
+            - abbr: HP
               href: https://gethomepage.dev/
-    - Certifications:
-        - Whizlabs:
-            - abbr: Whiz
-              href: https://www.whizlabs.com/learn/my-courses
-        - Boson ExSim:
-            - abbr: Boson
-              href: https://exams.boson.com/
-
+        - Kubernetes:
+            - abbr: K8s
+              href: https://kubernetes.io/docs/
 
   services.yaml: |
-    - Network & Core:
-        - OPNSense:
-            href: https://192.168.10.1
-            description: Router/Firewall
-            icon: opnsense.svg
-            widget:
-              type: opnsense
-              url: https://192.168.10.1
-              username: "{{HOMEPAGE_VAR_OPNSENSE_KEY}}"
-              password: "{{HOMEPAGE_VAR_OPNSENSE_SECRET}}"
-              verifySsl: false
-        - Unifi:
-            href: https://192.168.30.10:8443/
-            description: Unifi Controller
-            icon: unifi.svg
-            widget:
-              type: unifi
-              url: https://192.168.30.10:8443
-              site: HomeLab
-              username: "{{HOMEPAGE_VAR_UNIFI_USER}}"
-              password: "{{HOMEPAGE_VAR_UNIFI_PASS}}"
-        - Pi-hole:
-            description: Local DNS
-            href: http://192.168.30.5/admin/
-            icon: pi-hole.svg
-            widget:
-              type: pihole
-              url: http://192.168.30.5
-              version: 6
-              key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
-        - Authentik:
-            description: Local IdP
-            href: https://auth.lab42.codewithakay.dev
-            icon: authentik.svg
-
-    - Compute & Storage:
+    # === ROW 1 ===
+    - System:
         - Proxmox VE:
-            description: Proxmox Cluster
-            href: http://192.168.20.30:8006/
+            href: https://192.168.20.30:8006/
+            description: Hypervisor Cluster
             icon: proxmox.svg
             widget:
               type: proxmox
@@ -121,8 +335,8 @@ data:
               password: "{{HOMEPAGE_VAR_PVE_PASS}}"
               verifySsl: false
         - OMV:
-            description: Open Media Vault NAS
             href: http://192.168.20.20
+            description: OpenMediaVault NAS
             icon: openmediavault.svg
             widget:
               type: openmediavault
@@ -130,48 +344,160 @@ data:
               username: "{{HOMEPAGE_VAR_OMV_USER}}"
               password: "{{HOMEPAGE_VAR_OMV_PASS}}"
               method: services.getStatus
-        - MinIO:
-            description: S3 Storage buckets
-            href: http://192.168.20.20:9001
-            icon: minio.svg
-        - Longhorn:
-            description: K8s iSCSI Storage Provisioner
-            href: http://cwk.longhorn/
-            icon: longhorn.svg
 
-    - Observability:
+    - Network & Security:
+        - OPNSense:
+            href: https://192.168.10.1
+            description: Gateway Firewall
+            icon: opnsense.svg
+            widget:
+              type: opnsense
+              url: https://192.168.10.1
+              username: "{{HOMEPAGE_VAR_OPNSENSE_KEY}}"
+              password: "{{HOMEPAGE_VAR_OPNSENSE_SECRET}}"
+              verifySsl: false
+              fields: ["cpu", "memory", "wanUpload", "wanDownload"]
+        - Unifi:
+            href: https://192.168.30.10:8443/
+            description: Network Controller
+            icon: unifi.svg
+            widget:
+              type: unifi
+              url: https://192.168.30.10:8443
+              site: HomeLab
+              username: "{{HOMEPAGE_VAR_UNIFI_USER}}"
+              password: "{{HOMEPAGE_VAR_UNIFI_PASS}}"
+
+    - Identity & Access:
+        - Authentik:
+            href: https://auth.lab42.codewithakay.dev
+            description: Identity & SSO Provider
+            icon: authentik.svg
+            widget:
+              type: authentik
+              url: http://authentik-server.authentik.svc.cluster.local:9000
+              key: "{{HOMEPAGE_VAR_AUTHENTIK_TOKEN}}"
         - Netbox:
-            description: DCIM/IPAM
             href: http://192.168.10.50:8000
+            description: DCIM & IPAM Source
             icon: netbox.svg
-        - Grafana:
-            description: Metrics Dashboards
-            href: http://cwk.grafana/
-            icon: grafana.svg
-        - Graylog:
-            href: http://cwk.graylog/
-            icon: graylog.svg
+            ping: http://192.168.10.50:8000/api/
+
+    # === ROW 2 ===
+    - Storage & Data:
+        - MinIO:
+            href: http://192.168.20.20:9001
+            description: S3 Object Storage
+            icon: minio.svg
+            ping: http://minio.storage.svc.cluster.local:9000/minio/health/live
+        - Longhorn:
+            href: http://cwk.longhorn/
+            description: K8s CSI Block Storage
+            icon: longhorn.svg
+            ping: http://longhorn-frontend.longhorn-system.svc.cluster.local:80/
         - pgAdmin:
             href: http://cwk.pgadmin/
+            description: Postgres Admin
             icon: pgadmin.svg
+            ping: http://pgadmin.databases.svc.cluster.local:80/misc/ping
 
-    - Apps & Automation:
+    - Gateways:
+        - Pi-hole:
+            href: http://192.168.30.5/admin/
+            description: DNS & Ad Blocking
+            icon: pi-hole.svg
+            widget:
+              type: pihole
+              url: http://192.168.30.5
+              version: 6
+              key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
+        - Cloudflare:
+            href: https://dash.cloudflare.com/
+            description: Zero Trust Tunnel
+            icon: cloudflare.svg
+            widget:
+              type: cloudflared
+              accountid: "{{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID}}"
+              tunnelid: "{{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID}}"
+              key: "{{HOMEPAGE_VAR_CLOUDFLARE_KEY}}"
+
+    - Observability & Automation:
+        - Grafana:
+            href: http://cwk.grafana/
+            description: Metrics & Dashboards
+            icon: grafana.svg
+            widget:
+              type: grafana
+              url: http://grafana.monitoring.svc.cluster.local:3000
+              username: "{{HOMEPAGE_VAR_GRAFANA_USER}}"
+              password: "{{HOMEPAGE_VAR_GRAFANA_PASS}}"
+        - Graylog:
+            href: http://cwk.graylog/
+            description: Log Management
+            icon: graylog.svg
+            ping: http://graylog.logging.svc.cluster.local:9000/
         - n8n:
-            description: No code automation framework
             href: http://cwk.n8n/
+            description: Workflow Automation
             icon: n8n.svg
+            ping: http://n8n.automation.svc.cluster.local:5678/healthz
         - Wallabag:
             href: http://cwk.wallabag
+            description: Archival & Reading
             icon: wallabag.svg
+            ping: http://wallabag.apps.svc.cluster.local:80/
+
+    # === SIDEBAR (off-canvas drawer, see custom.css / custom.js) ===
+    - Sidebar:
+        - Calendar:
+            icon: mdi-calendar
+            widget:
+              type: calendar
+              view: agenda # monthly grid isn't clickable — this lists events directly instead
+              maxEvents: 10
+              showTime: true
+              integrations:
+                - type: ical
+                  name: "My Calendar"
+                  url: "{{HOMEPAGE_VAR_ICAL_URL}}"
+                  color: teal
+        - Weather:
+            icon: mdi-weather-partly-cloudy
+            widget:
+              type: customapi
+              url: https://api.open-meteo.com/v1/forecast?latitude=51.5074&longitude=-0.1278&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FLondon
+              refreshInterval: 600000
+              mappings:
+                - field: current.temperature_2m
+                  label: temperature.now
+                  format: text
+                - field: daily.temperature_2m_max.0
+                  label: temperature.max
+                  format: text
 
   widgets.yaml: |
+    # Everything in this file renders as small items in ONE row at the very
+    # top of the page (next to the search bar) — that's a hard constraint of
+    # how gethomepage's "info widgets" work. Weather CANNOT become a grid
+    # card this way — the big Weather card is instead the `customapi`
+    # service widget in the Sidebar group in services.yaml above.
+
     - search:
         provider: duckduckgo
         target: _blank
+
+    - openmeteo:
+        label: Local
+        latitude: 51.5074
+        longitude: -0.1278
+        timezone: Europe/London
+        units: metric
+
     - datetime:
         format:
           timeStyle: short
           dateStyle: short
+
     - kubernetes:
         cluster:
           show: true
@@ -181,12 +507,3 @@ data:
           label: "Cluster"
         nodes:
           show: true
-    # - longhorn:
-    #   # Show the expanded view
-    #   expanded: true
-    #   # Shows a node representing the aggregate values
-    #   total: true
-    #   # Shows the node names as labels
-    #   labels: true
-    #   # Show the nodes
-    #   nodes: true
