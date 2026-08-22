@@ -88,7 +88,13 @@ data:
       border: 1px solid var(--glass-border) !important;
       border-radius: 10px !important;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      break-inside: avoid !important; /* stop cards splitting across CSS columns */
+      break-inside: avoid !important; 
+      
+      /* Safely force equal heights and push stats to bottom */
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
     }
 
     .service-card:hover, .widget-card:hover {
@@ -106,6 +112,7 @@ data:
       color: rgba(220, 230, 240, 0.9) !important;
       margin-bottom: 0.5rem !important;
     }
+
 
     /* Stat Badges / Metrics */
     .widget-stat {
@@ -427,7 +434,7 @@ data:
               type: grafana
               url: http://grafana.monitoring.svc.cluster.local:3000
               username: "{{HOMEPAGE_VAR_GRAFANA_USER}}"
-              password: "{{HOMEPAGE_VAR_GRAFANA_PASS}}"
+              password: "{{HOMEPAGE_VAR_GRAFANA_API_TOKEN}}"
         - Graylog:
             href: http://cwk.graylog/
             description: Log Management
