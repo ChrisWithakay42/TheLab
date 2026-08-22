@@ -28,8 +28,6 @@ spec:
           env:
             - name: LISTEN_PORT
               value: "6432"
-            - name: DB_PORT
-              value: "5432"
             - name: POOL_MODE
               value: "transaction"
             - name: MAX_CLIENT_CONN
