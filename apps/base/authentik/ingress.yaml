@@ -10,7 +10,7 @@ spec:
   tls:
     - hosts:
         - auth.lab42.codewithakay.dev
-      secretName: authentik-staging-tls-cert
+      secretName: authentik-production-tls-cert
   rules:
     - host: auth.lab42.codewithakay.dev
       http:
