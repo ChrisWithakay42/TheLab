@@ -21,12 +21,13 @@ spec:
           ports:
             - containerPort: 6432
               name: pgbouncer
-          # Mounts DB_HOST, DB_USER, DB_PASSWORD, DB_NAME directly from ExternalSecret
           envFrom:
             - secretRef:
                 name: pgbouncer-secret
           # Pool behavior overrides for Aiven compatibility
           env:
+            - name: LISTEN_PORT
+              value: "6432"
             - name: DB_PORT
               value: "5432"
             - name: POOL_MODE
