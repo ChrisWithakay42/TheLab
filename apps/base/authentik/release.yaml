@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: authentik
@@ -13,140 +13,35 @@ spec:
         kind: HelmRepository
         name: authentik
         namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
-  releaseName: authentik
-
   values:
     authentik:
       error_reporting:
         enabled: true
-        
+
     postgresql:
       enabled: false 
     redis:
       enabled: false
 
-    # --- SERVER CONFIGURATION ---
+    global:
+      envFrom:
+        - secretRef:
+            name: authentik-secret
+
     server:
       env:
-        # Global & Connection TLS
         - name: AUTHENTIK_REDIS__TLS
           value: "true"
         - name: AUTHENTIK_POSTGRESQL__OPTIONS__SSLMODE
-          value: "require"
-          
-        # Native Kubernetes Secret Injection
-        - name: AUTHENTIK_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: AUTHENTIK_SECRET_KEY
-        - name: AUTHENTIK_POSTGRESQL__HOST
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_HOST
-        - name: AUTHENTIK_POSTGRESQL__PORT
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_PORT
-        - name: AUTHENTIK_POSTGRESQL__NAME
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_NAME
-        - name: AUTHENTIK_POSTGRESQL__USER
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_USER
-        - name: AUTHENTIK_POSTGRESQL__PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_PASSWORD
-        - name: AUTHENTIK_REDIS__HOST
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: REDIS_HOST
-        - name: AUTHENTIK_REDIS__PORT
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: REDIS_PORT
-        - name: AUTHENTIK_REDIS__USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: REDIS_USERNAME
-        - name: AUTHENTIK_REDIS__PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: REDIS_PASSWORD
+          value: "disable"
+        - name: AUTHENTIK_POSTGRESQL__DISABLE_SERVER_SIDE_CURSORS
+          value: "true"
 
-    # --- WORKER CONFIGURATION ---
-    # The worker pod needs the exact same database credentials
     worker:
       env:
         - name: AUTHENTIK_REDIS__TLS
           value: "true"
         - name: AUTHENTIK_POSTGRESQL__OPTIONS__SSLMODE
-          value: "require"
-        - name: AUTHENTIK_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: AUTHENTIK_SECRET_KEY
-        - name: AUTHENTIK_POSTGRESQL__HOST
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_HOST
-        - name: AUTHENTIK_POSTGRESQL__PORT
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_PORT
-        - name: AUTHENTIK_POSTGRESQL__NAME
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_NAME
-        - name: AUTHENTIK_POSTGRESQL__USER
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_USER
-        - name: AUTHENTIK_POSTGRESQL__PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: POSTGRESQL_PASSWORD
-        - name: AUTHENTIK_REDIS__HOST
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: REDIS_HOST
-        - name: AUTHENTIK_REDIS__PORT
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: REDIS_PORT
-        - name: AUTHENTIK_REDIS__USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: REDIS_USERNAME
-        - name: AUTHENTIK_REDIS__PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secret
-              key: REDIS_PASSWORD
+          value: "disable"
+        - name: AUTHENTIK_POSTGRESQL__DISABLE_SERVER_SIDE_CURSORS
+          value: "true"
