@@ -106,7 +106,7 @@ data:
               key: "{{HOMEPAGE_VAR_PIHOLE_WEBPASSWORD}}"
         - Authentik:
             description: Local IdP
-            href: http://auth.cwk.lab42/
+            href: https://auth.lab42.codewithakay.dev
             icon: authentik.svg
 
     - Compute & Storage:
