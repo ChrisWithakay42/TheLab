@@ -3,17 +3,22 @@ kind: Ingress
 metadata:
   name: authentik-ingress
   namespace: authentik
-  # Add annotations here if you use cert-manager (e.g., cert-manager.io/cluster-issuer: "letsencrypt-prod")
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - auth.lab42.codewithakay.dev
+      secretName: authentik-staging-tls-cert
   rules:
-    - host: auth.cwk.lab42
+    - host: auth.lab42.codewithakay.dev
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: authentik-server 
+                name: authentik-server
                 port:
                   number: 80
