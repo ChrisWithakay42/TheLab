@@ -214,14 +214,13 @@ data:
 
   custom.js: |
     (function () {
-      // --- Sidebar drawer ---
+      // === 1. Sidebar Drawer Logic ===
       function findSidebarGroup() {
         var container = document.getElementById('layout-groups');
         if (!container) return null;
-        var groups = container.children;
-        for (var i = 0; i < groups.length; i++) {
-          if (groups[i].textContent.trim().indexOf('Sidebar') === 0) {
-            return groups[i];
+        for (var i = 0; i < container.children.length; i++) {
+          if (container.children[i].textContent.trim().indexOf('Sidebar') === 0) {
+            return container.children[i];
           }
         }
         return null;
@@ -231,13 +230,6 @@ data:
         var sidebar = findSidebarGroup();
         if (!sidebar) return false;
 
-        // Move it to be a DIRECT child of <body>. If any ancestor between
-        // the original spot and <body> has a CSS transform (common in
-        // Tailwind/Next.js apps, even an idle GPU-acceleration transform),
-        // that ancestor silently becomes this element's containing block
-        // instead of the viewport — position:fixed then behaves like
-        // position:absolute inside a scrollable container, which is why
-        // it stayed reachable by scrolling even while "closed".
         if (sidebar.parentElement !== document.body) {
           document.body.appendChild(sidebar);
         }
@@ -262,47 +254,52 @@ data:
           });
           document.body.appendChild(toggle);
         }
-
         return true;
       }
 
-      // --- OPNsense label shortening ---
-      // Widget labels ("WAN UPLOAD"/"WAN DOWNLOAD") are hardcoded text from
-      // Homepage's translation strings, not attributes, so CSS can't
-      // rewrite them — this walks text nodes and swaps them after render.
-      var LABEL_REPLACEMENTS = {
-        'WAN UPLOAD': 'WAN UP',
-        'WAN DOWNLOAD': 'WAN DOWN',
-        'CPU LOAD': 'CPU',
-        'ACTIVE MEMORY': 'MEMORY'
+      // Run sidebar initializer until it finds it, then stop this specific loop
+      var sidebarTries = 0;
+      var sidebarInterval = setInterval(function () {
+        sidebarTries++;
+        if (initSidebar() || sidebarTries > 20) {
+          clearInterval(sidebarInterval);
+        }
+      }, 250);
+
+
+      // === 2. Label Shortening Logic (FIXED) ===
+      var LABEL_MAP = {
+        'wan upload': 'UP',
+        'wan download': 'DOWN',
+        'active memory': 'MEM',
+        'memory': 'MEM',
+        'cpu load': 'CPU'
       };
 
       function shortenLabels() {
-        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        var node;
-        while ((node = walker.nextNode())) {
-          var text = node.nodeValue.trim();
-          if (Object.prototype.hasOwnProperty.call(LABEL_REPLACEMENTS, text)) {
-            node.nodeValue = LABEL_REPLACEMENTS[text];
+        // Target elements that hold text in Homepage
+        var elements = document.querySelectorAll('div, span, p');
+        for (var i = 0; i < elements.length; i++) {
+          var el = elements[i];
+          
+          // el.children.length === 0 ensures we only modify the deepest level text wrappers.
+          // This stops us from accidentally deleting sibling stat values or icons.
+          if (el.children.length === 0 && el.textContent) {
+            var text = el.textContent.trim().toLowerCase();
+            
+            // If the text matches our map, AND it hasn't already been changed
+            if (LABEL_MAP[text] && el.textContent !== LABEL_MAP[text]) {
+              el.textContent = LABEL_MAP[text];
+            }
           }
         }
       }
 
-      var tries = 0;
-      var iv = setInterval(function () {
-        tries++;
-        var sidebarReady = initSidebar();
-        shortenLabels();
-        if (sidebarReady || tries > 20) clearInterval(iv);
-      }, 250);
-
-      // OPNsense stats refetch periodically and re-render with the full
-      // original label text, so keep re-shortening whenever the DOM
-      // changes rather than relying on the one-time interval above.
-      var observer = new MutationObserver(function () {
-        shortenLabels();
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
+      // Instead of an observer (which fights with React), we run a continuous 
+      // 1-second polling interval. It takes effectively 0 processing power 
+      // but ensures slow API fetches from OPNsense are instantly caught.
+      setInterval(shortenLabels, 1000);
+      shortenLabels(); // Run once immediately
     })();
 
   bookmarks.yaml: |
@@ -376,7 +373,7 @@ data:
             widget:
               type: authentik
               url: http://authentik-server.authentik.svc.cluster.local:9000
-              key: "{{HOMEPAGE_VAR_AUTHENTIK_TOKEN}}"
+              key: "{{HOMEPAGE_VAR_AUTHENTIK_KEY}}"
         - Netbox:
             href: http://192.168.10.50:8000
             description: DCIM & IPAM Source
@@ -419,7 +416,7 @@ data:
               type: cloudflared
               accountid: "{{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT_ID}}"
               tunnelid: "{{HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_ID}}"
-              key: "{{HOMEPAGE_VAR_CLOUDFLARE_KEY}}"
+              key: "{{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}"
 
     - Observability & Automation:
         - Grafana:
