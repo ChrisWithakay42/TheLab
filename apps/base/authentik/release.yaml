@@ -37,11 +37,11 @@ spec:
         - name: AUTHENTIK_POSTGRESQL__DISABLE_SERVER_SIDE_CURSORS
           value: "true"
 
-    worker:
-      env:
-        - name: AUTHENTIK_REDIS__TLS
-          value: "true"
-        - name: AUTHENTIK_POSTGRESQL__OPTIONS__SSLMODE
-          value: "disable"
-        - name: AUTHENTIK_POSTGRESQL__DISABLE_SERVER_SIDE_CURSORS
-          value: "true"
+    # worker:
+    #   env:
+    #     - name: AUTHENTIK_REDIS__TLS
+    #       value: "true"
+    #     - name: AUTHENTIK_POSTGRESQL__OPTIONS__SSLMODE
+    #       value: "disable"
+    #     - name: AUTHENTIK_POSTGRESQL__DISABLE_SERVER_SIDE_CURSORS
+    #       value: "true"
