@@ -3,11 +3,14 @@ kind: Service
 metadata:
   name: pgbouncer-service
   namespace: authentik
+  labels:
+    app.kubernetes.io/name: pgbouncer
 spec:
   type: ClusterIP
   ports:
     - port: 6432
       targetPort: 6432
+      protocol: TCP
       name: pgbouncer
   selector:
     app.kubernetes.io/name: pgbouncer
