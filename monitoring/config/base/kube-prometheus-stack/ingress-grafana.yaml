@@ -3,10 +3,16 @@ kind: Ingress
 metadata:
   name: grafana
   namespace: monitoring
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - grafana.lab42.codewithakay.dev
+      secretName: grafana-production-tls-cert
   rules:
-    - host: "cwk.grafana"
+    - host: grafana.lab42.codewithakay.dev
       http:
         paths:
           - path: "/"
