@@ -132,6 +132,20 @@ data:
       min-width: 0;
     }
 
+    *:has(> .widget-stat) {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.4rem !important;
+    }
+
+    .widget-stat {
+      flex: 1 1 calc(50% - 0.4rem) !important;
+      min-width: 110px !important;
+      box-sizing: border-box !important;
+      text-align: center !important;
+      padding: 0.35rem 0.4rem !important;
+    }
+
     html, body {
       overflow-x: hidden;
     }
@@ -379,8 +393,9 @@ data:
             icon: authentik.svg
             widget:
               type: authentik
-              url: http://authentik-server.authentik.svc.cluster.local:9000
+              url: http://authentik-server.authentik.svc.cluster.local:80/
               key: "{{HOMEPAGE_VAR_AUTHENTIK_KEY}}"
+              version: 2
         - Netbox:
             href: http://192.168.10.50:8000
             description: DCIM & IPAM Source
@@ -393,7 +408,7 @@ data:
             href: http://192.168.20.20:9001
             description: S3 Object Storage
             icon: minio.svg
-            ping: http://minio.storage.svc.cluster.local:9000/minio/health/live
+            ping: 102.168.20.20:9000/minio/health/live
         - Longhorn:
             href: http://cwk.longhorn/
             description: K8s CSI Block Storage
@@ -403,7 +418,7 @@ data:
             href: http://cwk.pgadmin/
             description: Postgres Admin
             icon: pgadmin.svg
-            ping: http://pgadmin.databases.svc.cluster.local:80/misc/ping
+            ping: http://pgadmin.pgadmin.svc.cluster.local:80/misc/ping
 
     - Gateways:
         - Pi-hole:
@@ -432,7 +447,7 @@ data:
             icon: grafana.svg
             widget:
               type: grafana
-              url: http://grafana.monitoring.svc.cluster.local:3000
+              url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:80              
               username: "{{HOMEPAGE_VAR_GRAFANA_USER}}"
               password: "{{HOMEPAGE_VAR_GRAFANA_API_TOKEN}}"
         - Graylog:
@@ -444,12 +459,12 @@ data:
             href: http://cwk.n8n/
             description: Workflow Automation
             icon: n8n.svg
-            ping: http://n8n.automation.svc.cluster.local:5678/healthz
+            ping: http://n8n.n8n.svc.cluster.local:5678/healthz
         - Wallabag:
             href: http://cwk.wallabag
             description: Archival & Reading
             icon: wallabag.svg
-            ping: http://wallabag.apps.svc.cluster.local:80/
+            ping: http://wallabag.wallabag.svc.cluster.local:80/
 
     # === SIDEBAR (off-canvas drawer, see custom.css / custom.js) ===
     - Sidebar:
