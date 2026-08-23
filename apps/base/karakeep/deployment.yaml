@@ -15,12 +15,24 @@ spec:
       labels:
         app: karakeep
     spec:
+      # Ensures the container user (UID 1000) has read/write permissions on the PVC
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsGroup: 1000
       containers:
         - name: karakeep
           image: ghcr.io/karakeep-app/karakeep:release
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 3000
               name: http
+          env:
+            - name: DATA_DIR
+              value: /data
+            # Uncomment if you want to explicitly bind to port 8080 instead of 3000:
+            # - name: PORT
+            #   value: "8080"
           envFrom:
             - secretRef:
                 name: karakeep-secret
