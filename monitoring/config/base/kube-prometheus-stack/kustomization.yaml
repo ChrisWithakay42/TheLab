@@ -6,9 +6,21 @@ resources:
   - ingress-prometheus.yaml
   - ingress-alertmanager.yaml
   - ingress-grafana.yaml
+
 configMapGenerator:
-- name: kube-prometheus-stack-values
-  files:
-  - values.yaml
+  - name: kube-prometheus-stack-values
+    files:
+      - values.yaml
+
+  # Public Dashboards
+  - name: grafana-dashboard-node-exporter
+    files:
+      - ../../../../utils/dashboards/node-exporter-full.json
+    options:
+      labels:
+        grafana_dashboard: "1"
+      annotations:
+        grafana_dashboard_folder: "Infrastructure"
+
 generatorOptions:
   disableNameSuffixHash: true
