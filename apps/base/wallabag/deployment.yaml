@@ -14,13 +14,11 @@ spec:
     metadata:
       labels:
         app: wallabag
-        try: "0"
-        policy-type: "app"
     spec:
       securityContext:
-        fsGroup: 65534 # Assigns 'nobody' group permissions to the PVC volume
+        fsGroup: 65534 # nobody group
       initContainers:
-        # Permission & Directory fixer container (creates required subdirectories and sets ownership)
+        # 1. Prepare directory structure and persistent storage permissions
         - name: fix-permissions
           image: busybox:latest
           command:
@@ -32,6 +30,21 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/www/wallabag/data
+
+        # 2. Automated DB Migrations (Runs only migrations, will never fail on restart)
+        - name: db-migrate
+          image: ghcr.io/wallabag/docker:2.6.10
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "bin/console doctrine:migrations:migrate --env=prod --no-interaction || true"
+          envFrom:
+            - secretRef:
+                name: wallabag-secret
+          volumeMounts:
+            - name: data
+              mountPath: /var/www/wallabag/data
+
       containers:
         - name: wallabag
           image: ghcr.io/wallabag/docker:2.6.10
@@ -41,7 +54,8 @@ spec:
             - secretRef:
                 name: wallabag-secret
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 80
               protocol: TCP
           volumeMounts:
             - name: data
