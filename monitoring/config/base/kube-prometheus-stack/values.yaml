@@ -30,6 +30,12 @@ grafana:
       role_attribute_path: "contains(groups, 'authentik Admins') && 'Admin' || 'Viewer'"
       role_attribute_strict: false
       allow_assign_grafana_admin: true
+    security:
+      allow_embedding: true
+      cookie_samesite: none
+      cookie_secure: true
+    auth.anonymous:
+      enabled: false
 
   additionalDataSources:
   - name: Loki
