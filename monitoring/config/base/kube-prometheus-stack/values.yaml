@@ -21,7 +21,7 @@ grafana:
       
       client_id: "$__env{OAUTH_CLIENT_ID}"
       client_secret: "$__env{OAUTH_CLIENT_SECRET}"
-      scopes: "openid profile email"
+      scopes: "openid profile email groups"
       
       auth_url: "https://auth.lab42.codewithakay.dev/application/o/authorize/"
       token_url: "https://auth.lab42.codewithakay.dev/application/o/token/"
