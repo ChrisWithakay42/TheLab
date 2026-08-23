@@ -66,6 +66,21 @@ data:
       align-items: stretch !important; /* overrides Tailwind's items-start, which was the actual cause */
     }
 
+    .services-group {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .services-group > div[id^="headlessui-disclosure-panel-"] {
+      flex: 1 1 auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .services-group > div[id^="headlessui-disclosure-panel-"] > * {
+      flex: 1 1 auto !important; /* the actual card grid, one level in — grows to fill the panel */
+    }
+
     @media (min-width: 1280px) {
       #layout-groups > .services-group:not(.drawer-group) {
         flex: 0 1 calc((100% - 2rem) / 3) !important;
@@ -113,15 +128,6 @@ data:
       margin-bottom: 0.5rem !important;
     }
 
-
-    /* Stat Badges / Metrics */
-    .widget-stat {
-      background-color: rgba(0, 0, 0, 0.4) !important;
-      border: 1px solid rgba(255, 255, 255, 0.06) !important;
-      border-radius: 5px !important;
-      font-weight: 600 !important;
-    }
-
     /* Prevent stat labels like "WAN DOWNLOAD" from breaking mid-word
        (was rendering as "WA" / "N DOWN" on narrow OPNsense-style cards) */
     .service-block,
@@ -132,18 +138,31 @@ data:
       min-width: 0;
     }
 
+    /* --- Stat Grid (fixed) ---
+       Was flex-wrap, which let wrapped multi-word labels (e.g. "FAILED LOGINS (24H)",
+       "TOTAL ALERTS") overlap the row below them on narrow cards. A real CSS grid
+       gives every row of stats its own reserved height instead. */
     *:has(> .widget-stat) {
-      display: flex !important;
-      flex-wrap: wrap !important;
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      grid-auto-rows: minmax(2.6rem, auto) !important; /* floors every row so a card with short labels can't squeeze a row that needs more room */
       gap: 0.4rem !important;
     }
 
     .widget-stat {
-      flex: 1 1 calc(50% - 0.4rem) !important;
-      min-width: 110px !important;
+      background-color: rgba(0, 0, 0, 0.4) !important;
+      border: 1px solid rgba(255, 255, 255, 0.06) !important;
+      border-radius: 5px !important;
+      font-weight: 600 !important;
       box-sizing: border-box !important;
       text-align: center !important;
       padding: 0.35rem 0.4rem !important;
+      position: relative !important;
+      z-index: 1 !important; /* keeps one stat's background from painting over a neighbor's text if rows ever get tight */
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      line-height: 1.15 !important;
     }
 
     html, body {
@@ -166,6 +185,9 @@ data:
       .widget-stat {
         padding: 0.15rem 0.3rem !important;
         font-size: 0.68rem !important;
+      }
+      *:has(> .widget-stat) {
+        grid-auto-rows: minmax(2.3rem, auto) !important;
       }
     }
 
@@ -294,7 +316,14 @@ data:
         'wan download': 'DOWN',
         'active memory': 'MEM',
         'memory': 'MEM',
-        'cpu load': 'CPU'
+        'cpu load': 'CPU',
+        'failed logins (24h)': 'FAILED (24H)',
+        'logins (24h)': 'LOGINS (24H)',
+        'auths (24h)': 'AUTHS (24H)',
+        'dashboards': 'DASH',       // was missing entirely — full word "DASHBOARDS" overflowed the Grafana card
+        'data sources': 'SRC',
+        'total alerts': 'ALERTS',
+        'alerts triggered': 'FIRED'
       };
 
       function shortenLabels() {
