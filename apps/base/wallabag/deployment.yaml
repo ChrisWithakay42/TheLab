@@ -35,7 +35,7 @@ spec:
 
         - name: wallabag-install
           image: ghcr.io/wallabag/docker:2.6.10
-          command: ['/bin/sh', '-c', 'SYMFONY_ENV=prod bin/console wallabag:install --no-interaction']
+          # command: ['/bin/sh', '-c', 'SYMFONY_ENV=prod bin/console wallabag:install --no-interaction']
           envFrom:
             - secretRef:
                 name: wallabag-secret
