@@ -460,11 +460,15 @@ data:
             description: Workflow Automation
             icon: n8n.svg
             ping: http://n8n.n8n.svc.cluster.local:5678/healthz
+    - Apps:
         - Wallabag:
             href: http://cwk.wallabag
             description: Archival & Reading
             icon: wallabag.svg
             ping: http://wallabag.wallabag.svc.cluster.local:80/
+        - Karakeep:
+            href: http://karakeep.apps.lab42
+            icon: karakeep.svg
 
     # === SIDEBAR (off-canvas drawer, see custom.css / custom.js) ===
     - Sidebar:
@@ -495,12 +499,6 @@ data:
                   format: text
 
   widgets.yaml: |
-    # Everything in this file renders as small items in ONE row at the very
-    # top of the page (next to the search bar) — that's a hard constraint of
-    # how gethomepage's "info widgets" work. Weather CANNOT become a grid
-    # card this way — the big Weather card is instead the `customapi`
-    # service widget in the Sidebar group in services.yaml above.
-
     - search:
         provider: duckduckgo
         target: _blank
