@@ -17,6 +17,8 @@ spec:
       labels:
         app: postgres
     spec:
+      nodeSelector:
+        node-type: vm
       # Protect the DB from eviction
       priorityClassName: application-high
       containers:

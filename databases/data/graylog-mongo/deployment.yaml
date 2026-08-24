@@ -17,6 +17,8 @@ spec:
       labels:
         app: mongo
     spec:
+      nodeSelector:
+        node-type: vm
       priorityClassName: application-high
       containers:
         - name: mongo

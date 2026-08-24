@@ -17,6 +17,8 @@ spec:
       labels:
         app: postgres
     spec:
+      nodeSelectore:
+        node-type: vm
       containers:
         - name: postgres
           image: postgres:15

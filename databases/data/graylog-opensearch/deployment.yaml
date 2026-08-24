@@ -17,6 +17,8 @@ spec:
       labels:
         app: opensearch
     spec:
+      nodeSelector:
+        node-type: vm
       priorityClassName: application-high
       securityContext:
         fsGroup: 1000

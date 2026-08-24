@@ -19,6 +19,8 @@ spec:
       labels:
         app: mongo
     spec:
+      nodeSelector:
+        node-type: vm
       # Protect the Network Database from being killed by lower-priority apps
       priorityClassName: application-high
       containers:
