@@ -17,8 +17,16 @@ spec:
       labels:
         app: postgres
     spec:
-      nodeSelectore:
-        node-type: vm
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                - vm
       containers:
         - name: postgres
           image: postgres:15

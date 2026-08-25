@@ -17,8 +17,16 @@ spec:
       labels:
         app: opensearch
     spec:
-      nodeSelector:
-        node-type: vm
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                - vm
       priorityClassName: application-high
       securityContext:
         fsGroup: 1000

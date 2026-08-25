@@ -19,8 +19,16 @@ spec:
       labels:
         app: mongo
     spec:
-      nodeSelector:
-        node-type: vm
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                - vm
       # Protect the Network Database from being killed by lower-priority apps
       priorityClassName: application-high
       containers:
