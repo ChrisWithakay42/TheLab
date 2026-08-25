@@ -20,7 +20,7 @@ spec:
         app: mongo
     spec:
       nodeSelector:
-        node-type: baremetal
+        node-type: metal
       # Protect the Network Database from being killed by lower-priority apps
       priorityClassName: application-high
       containers:
