@@ -57,6 +57,16 @@ prometheus:
   ingress:
     enabled: false
   prometheusSpec:
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+            - key: node-type
+              operator: In
+              values:
+              - vm
     retention: 7d
     retentionSize: 6GB
     scrapeInterval: 30s
@@ -87,6 +97,16 @@ alertmanager:
   ingress:
     enabled: false
   alertmanagerSpec:
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+            - key: node-type
+              operator: In
+              values:
+              - vm
     resources:
       requests:
         cpu: 100m
