@@ -29,6 +29,11 @@ data:
         enabled: true
       ui:
         enabled: true
+      ingress:
+        enabled: true
+        classname: "cilium"
+        hosts: 
+          - cwk.hubble
       metrics:
         enabled:
           - dns
