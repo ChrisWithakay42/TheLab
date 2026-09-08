@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: etcd-minio-backup
+  namespace: kube-system
+spec:
+  schedule: "0 */6 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: etcd-backup
+              image: your-repo/etcd-backup:latest
+              env:
+                - name: ETCD_ENDPOINTS
+                  value: "https://192.168.1.11:2379,https://192.168.1.12:2379,https://192.168.1.13:2379"
+                - name: ETCD_CACERT
+                  value: "/etc/etcd-certs/ca.crt"
+                - name: ETCD_CERT
+                  value: "/etc/etcd-certs/cert.crt"
+                - name: ETCD_KEY
+                  value: "/etc/etcd-certs/cert.key"
+                - name: MINIO_ENDPOINT
+                  value: "minio.storage.svc.cluster.local:9000"
+                - name: MINIO_BUCKET
+                  value: "etcd-backups"
+                - name: MINIO_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-creds
+                      key: access-key
+                - name: MINIO_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-creds
+                      key: secret-key
+              volumeMounts:
+                - name: certs
+                  mountPath: /etc/etcd-certs
+                  readOnly: true
+          volumes:
+            - name: certs
+              secret:
+                secretName: etcd-backup-certs
+                defaultMode: 0400
