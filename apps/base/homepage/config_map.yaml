@@ -426,10 +426,10 @@ data:
               key: "{{HOMEPAGE_VAR_AUTHENTIK_KEY}}"
               version: 2
         - Netbox:
-            href: http://192.168.10.50:8000
+            href: http://192.168.30.7
             description: DCIM & IPAM Source
             icon: netbox.svg
-            ping: http://192.168.10.50:8000/api/
+            ping: http://192.168.30.7/api/
 
     # === ROW 2 ===
     - Storage & Data:
